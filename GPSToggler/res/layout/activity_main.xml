@@ -1,0 +1,92 @@
+<ScrollView 	xmlns:android="http://schemas.android.com/apk/res/android"
+    		  	xmlns:tools="http://schemas.android.com/tools"
+    		  	android:layout_width="match_parent"
+    			android:layout_height="match_parent"
+    			tools:context=".MainActivity" 
+    			android:orientation="vertical"
+    			android:fadeScrollbars="false"
+    			android:scrollbarFadeDuration="0" 
+    			android:scrollbars="vertical" >
+
+	<LinearLayout 	android:layout_width="match_parent"
+	    			android:layout_height="wrap_content"
+	    			android:layout_marginLeft="10dp"
+	    			android:layout_marginRight="10dp"
+	    			tools:context=".MainActivity" 
+	    			android:orientation="vertical" >
+	    
+	    
+	    <TextView
+	        android:id="@+id/description"
+	        android:onClick="clickButton"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/description" />
+	    
+	    <TextView
+	        android:id="@+id/version"
+	        android:layout_marginTop="5dp"
+	        android:onClick="clickButton"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="" />
+	    
+	    <CheckBox
+	        android:id="@+id/waze"
+	        android:layout_marginTop="20dp"
+	        android:onClick="clickWatchWaze"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/watch_waze" />
+	    
+	    <TextView
+	        android:id="@+id/btText"
+	        android:layout_marginTop="20dp"
+	        android:onClick="clickButton"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/bt_text" />
+	    
+	    <CheckBox
+	        android:id="@+id/bt"
+	        android:layout_marginTop="20dp"
+	        android:onClick="clickTurnBT"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/switch_bt" />
+	    
+	    <Button
+	        android:id="@+id/button"
+	        android:layout_marginTop="20dp"
+	        android:onClick="clickButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/status_unknwon" />
+	
+	    <TextView
+	        android:id="@+id/btText2"
+	        android:layout_marginTop="40dp"
+	        android:onClick="clickButton"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/uninstall_text" />
+	    
+	    <Button
+	        android:id="@+id/uninstall"
+	        android:layout_marginTop="20dp"
+	        android:onClick="clickUninstall"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/uninstall" />
+	    
+	    <Button
+	        android:id="@+id/test"
+	        android:layout_marginTop="40dp"
+	        android:onClick="clickTest"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:enabled="false"
+	        android:text="@+string/test_button" />
+	    
+	</LinearLayout>
+</ScrollView>

@@ -1,0 +1,14 @@
+<project name="Custom Ant Build">
+    
+    <target name="copyVersion">
+        <echo message="Copying version file..." />
+
+    	<exec	executable="cmd" >
+    		<arg value="/c" />
+    		<arg value="version_copier.bat" />
+    	</exec>
+    </target>
+ 
+    <target name="default" depends="copyVersion" />
+    
+</project>

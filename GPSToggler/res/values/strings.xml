@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="description">\tGPSToggler is a widget based program. It can turn on and off GPS even for those ROMs and kernels other widgets fail.\n\n\tThis widget requires the root access.\n\n\tSingle click on the widget toggles the GPS. Double click - launches this panel.\n\n\tThe widget may enable/disable GPS when Waze, iGO or Google Maps (de)activated (experimental).</string>
+    
+    <string name="watch_waze">Watch for Waze/iGo/Google Maps</string>
+    
+    <string name="app_name">GPSToggler</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+	<string name="widget_name">GPS on/off widget</string>
+	<string name="bt_text">\tThe application may also turn on/off your Bluetooth device</string>
+	<string name="switch_bt">Switch on/off Bluetooth accordingly</string>
+		
+	<string name="test_button">Test button</string>
+		
+	<string name="status_unknwon">GPS status unknown</string>
+	<string name="moveBack">Prepare to uninstall</string>
+	<string name="broadcast_syscom">Broadcast syscom</string>
+
+	<string name="error">Error</string>
+	<string name="warning">Warning</string>
+	
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	
+	<string name="uninstall_text">\tIf you wish to uninstall the application first press \'Uninstall\' to remove the system module.</string>
+	<string name="uninstall">Uninstall</string>
+	
+	<string name="uninstall_module">You are ready to uninstall the application. Proceed to Settings -> Application Manager (or Applications).</string>
+	<string name="uninstall_failed">The application failed to remove the system module. You still may uninstall the main APK.</string>
+			
+	<string name="gps_status">GPS status</string>
+	<string name="gps_on">[ON]</string>
+	<string name="gps_off">[OFF]</string>
+			
+	<string name="root">This application requires \'root\'.</string>
+	<string name="busybox">This application requires \'BusyBox\'. Do you want to install?</string>
+	<string name="install_module">This application need to install a module into the system area.\nInstall?</string>
+	<string name="move_success">The application successfully moved the module to /system/data area.\nReboot now?</string>
+	<string name="move_error">The application failed to move the module to /system/data area.\nAppparently you cannot use it as desired.\nSorry...</string>
+	<string name="fatal_error">The application encounterd a fatal error.\nSorry...</string>
+
+	<string name="verison_format">Version: %s</string>
+</resources>

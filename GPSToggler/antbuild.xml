@@ -1,0 +1,32 @@
+<project name="Custom Ant Build">
+    
+    <target name="copyVersion">
+        <echo message="Copying version file..." />
+
+    	<exec	executable="cmd" >
+    		<arg value="/c" />
+    		<arg value="version_copier.bat" />
+    	</exec>
+    </target>
+ 
+    <target name="copyNative">
+        <echo message="Copying native files..." />
+
+    	<exec	executable="cmd" >
+    		<arg value="/c" />
+    		<arg value="native_copier.bat" />
+    	</exec>
+    </target>
+    
+    <target name="copyStub">
+        <echo message="Copying stub APKs..." />
+
+    	<exec	executable="cmd" >
+    		<arg value="/c" />
+    		<arg value="stub_copier.bat" />
+    	</exec>
+    </target>
+    
+    <target name="default" depends="copyVersion, copyNative, copyStub" />
+    
+</project>

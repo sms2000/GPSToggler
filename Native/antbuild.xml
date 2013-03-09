@@ -1,0 +1,23 @@
+<project name="Custom Ant Build">
+    
+    <target name="updateVersion">
+        <echo message="Updating version..." />
+
+    	<exec	executable="cmd" >
+    		<arg value="/c" />
+    		<arg value="version_pusher.bat" />
+    	</exec>
+    </target>
+ 
+    <target name="makeNative">
+        <echo message="Building native code..." />
+    	
+    	<exec	executable="cmd" >
+    		<arg value="/c" />
+    		<arg value="make_native.bat" />
+    	</exec>
+    </target>
+    
+    <target name="default" depends="updateVersion, makeNative" />
+    
+</project>
