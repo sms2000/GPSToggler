@@ -337,20 +337,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 	
 	private void inviteSystemize() 
 	{
-		if (!new KernelServices().obtainRoot())
-		{
-			showRootDialog();
-			return;
-		}
-
-		
-		if (StateMachine.getRebootRequired())
-		{
-			showRebootDialog();
-			return;
-		}
-		
-		
 		if (!verifyCompliance())
 		{
 			showModuleInstallDialog();
@@ -491,7 +477,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 			    ALog.w(TAG, "Executing command [1]:\n" + command);
 			    ALog.w(TAG, "\n");
 
-		    	chperm 	= Runtime.getRuntime().exec ("su");
+		    	chperm 	= Runtime.getRuntime().exec ("su");	// The only one place we actually need SU
 		    	os 		= new DataOutputStream(chperm.getOutputStream());
 
 		    	os.writeBytes (command);
@@ -596,6 +582,40 @@ public class MainActivity extends Activity implements OnEndOfTask
 
 	
 
+	private void rebootAndroid()
+	{
+		ALog.v(TAG, "Entry...");
+		
+		try 
+		{
+	    	Process 			chperm;
+			String 				command;
+			
+		    command  = XBIN_DIRECTORY + NATIVE_RUNNER;
+	    	command += " " + "reboot";
+	    	command += "\n"; 
+
+		    chperm 	= Runtime.getRuntime().exec (command);
+
+	    	ALog.w(TAG, "Executing command [1]:\n" + command);
+		    ALog.w(TAG, "\n");
+
+		    chperm.waitFor(); 				
+			
+		    ALog.w(TAG, "Calling native code succeeded.");
+		    
+			ALog.w(TAG, "Rebooting...");
+		}
+		catch(Exception e)
+		{
+			ALog.e(TAG, "EXC(1).");
+			e.printStackTrace();
+		}
+
+		ALog.v(TAG, "Exit.");
+	}
+
+	
 	@Override
 	public void onEndOfTask (TaskIndex 	task, 
 							 boolean 	result) 
@@ -704,25 +724,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 	}
 
 
-	private void showRootDialog() 
-	{
-		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-		dialog.setTitle (R.string.warning);
-		dialog.setMessage (R.string.root);
-		dialog.setPositiveButton (R.string.ok, 
-								  new DialogInterface.OnClickListener() 
-		{
-			 public void onClick (DialogInterface 	arg0, 
-					 			  int 				arg1) 
-			 {
-				 finish();
-			 }
-		});
-
-		dialog.show();
-	}
-
-	
 	private void showRebootDialog() 
 	{
 		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -737,7 +738,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 				StateMachine.setRebootRequired (false);
 				StateMachine.writeToPersistantStorage();
 
-				new KernelServices().rebootAndroid();
+				rebootAndroid();
 				finish();
 			}
 		});
@@ -815,16 +816,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 	}
 
 	
-	public void invokeTest (View	view)
-	{
-		ALog.v(TAG, "Entry...");
-		
-		new KernelServices().rebootAndroid();
-		
-		ALog.v(TAG, "Exit.");
-	}
-	
-	
 	private boolean isSystemModuleExists()
 	{
 		try 
@@ -852,50 +843,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 	{
 		ALog.v(TAG, "Entry...");
 		
-/*		Context context = this.getApplicationContext();
-		
-		String packagePath = context.getPackageCodePath();
-		ALog.d(TAG, "clickTest. Package path: " + packagePath);
-		boolean success = false;
-
-		Mount 	sysFS 	= new KernelServices().findFS (SYSTEM_FS);
-		
-		if (null != sysFS)
-		{
-			try
-			{
-		    	Process 			chperm 	= Runtime.getRuntime().exec ("su");
-		    	DataOutputStream 	os 		= new DataOutputStream(chperm.getOutputStream());
-
-		    	String 				command = "";
-
-		    	command += "mount -o remount,rw " + sysFS.mDevice + " " + SYSTEM_FS + ";\n";     
-		    	command += "rm " + SYSTEM_DIRECTORY + MODULE_NAME + ";\n";
-			    command += "mount -o remount,ro " + sysFS.mDevice + " " + SYSTEM_FS + ";\n";     
-			    command += "exit\n";
-			    
-			    ALog.w(TAG, "Calling native code with the command: " + command);
-
-			    os.writeBytes (command);
-			    os.flush();
-			    
-			    Thread.sleep (100);
-			    chperm.waitFor();
-				
-			    ALog.w(TAG, "Calling native code succeeded. Finish.");
-			    
-			    success = true;
-			}
-			catch(Exception e)
-			{
-			}
-		}
-		
-		if (!success)
-		{
-			ALog.e(TAG, "Native code portion failed.");
-			success = false;
-		} */
 
 		ALog.v(TAG, "Exit.");
 	}

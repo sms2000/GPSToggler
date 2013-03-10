@@ -1,6 +1,5 @@
 package com.ogp.gpstoggler;
 
-import java.io.DataOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -14,9 +13,11 @@ public class KernelServices
 {
 	private static final String		TAG = "KernelServices";
 
+	private static final String 	SYSTEM_FS		 		= "/system";
+	private static final String 	MOUNTING_POINTS 		= "/proc/mounts";
+
+	
 	private static List<Mount>		mountPoints	= new ArrayList<Mount>(); 
-	private static boolean 			rootGranted	= false;
-	private static boolean 			rootDenied	= false;
 	
 	
 	public class Mount 
@@ -44,7 +45,7 @@ public class KernelServices
 		{
 			try
 			{
-				LineNumberReader 	lnr = new LineNumberReader(new FileReader("/proc/mounts"));
+				LineNumberReader 	lnr = new LineNumberReader(new FileReader(MOUNTING_POINTS));
 				String 				line;
 				
 				while ((line = lnr.readLine()) != null)
@@ -54,7 +55,7 @@ public class KernelServices
 										  	   fields[1],		// mounting point
 										  	   fields[2])); 	// type
 					
-					if (fields[1].equals ("/system"))
+					if (fields[1].equals (SYSTEM_FS))
 					{
 						ALog.v(TAG, "/system mounting point found.");
 					}
@@ -70,63 +71,6 @@ public class KernelServices
 		ALog.v(TAG, "Exit.");
 	}
 	
-	
-	public boolean obtainRoot() 
-	{
-		if (rootGranted)
-		{
-			return true;
-		}
-		else if (rootDenied)
-		{
-			return false;
-		}
-		
-	    try 
-	    {
-	    	Runtime.getRuntime().exec ("su");
-	    	rootGranted = true;
-
-	    	ALog.w(TAG, "Root granted.");
-	    	return true;
-	    }
-	    catch(Exception e)
-	    {
-	    	
-	    }
-	    	
-	    rootDenied = true;
-	    
-	    ALog.w(TAG, "Root denied.");
-		return false;
-	}
-
-
-	public void rebootAndroid()
-	{
-		ALog.v(TAG, "Entry...");
-
-		try 
-		{
-			Process process = Runtime.getRuntime().exec ("su");
-			DataOutputStream out = new DataOutputStream (process.getOutputStream());
-			out.writeBytes ("reboot\n");
-			out.flush();
-
-			out.writeBytes ("exit\n");
-			out.flush();
-
-			ALog.w(TAG, "Rebooting...");
-		}
-		catch(Exception e)
-		{
-			ALog.e(TAG, "EXC(1).");
-			e.printStackTrace();
-		}
-
-		ALog.v(TAG, "Exit.");
-	}
-
 	
 	public Mount findFS (String mountPoint) 
 	{
