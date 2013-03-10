@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/reboot.h>
 #include <linux/stat.h>
 
 
@@ -38,6 +39,7 @@
 // argv[1] - device path
 // argv[2] - mounting point
 // argv[3] - file system type
+// argv[4] - 'kill-self' option (at the end of processing removes self also)
 
 // For command 'copy2data'
 // argv[0] - source file path
@@ -48,18 +50,25 @@
 // argv[0] - source file path
 // argv[2] - 'gid-uid' option (set GID/PID)
 
+// For command 'reboot'
+// No arguments
+
 
 int copy2system (int 	argc,
 		  	  	 char	*argv[]);
 
 int remove4system (int 	argc,
-		  	  	   char	*argv[]);
+		  	  	   char	*argv[],
+		  	  	   char *pointerSelf);
 
 int copy2data (int 	argc,
 		  	   char	*argv[]);
 
 int attributes (int 	argc,
 		  	    char	*argv[]);
+
+int reboot (void);
+
 
 int main (int 		argc,
 		  char		*argv[])
@@ -93,28 +102,39 @@ int main (int 		argc,
 
     if (argc < 2)
     {
-
+        LOGE("main. Number of parameters is too short. No actual command recognized.");
     }
-    else if (!strcmp (argv[1], "copy2system"))
+    else if (!strcmp (argv[1],
+    				  "copy2system"))
     {
     	ret = copy2system (argc - 2,
     					   &argv[2]);
     }
-    else if (!strcmp (argv[1], "remove4system"))
+    else if (!strcmp (argv[1],
+    				  "remove4system"))
     {
     	ret = remove4system (argc - 2,
-    					     &argv[2]);
+    					     &argv[2],
+    					     argv[0]);
     }
-    else if (!strcmp (argv[1], "copy2data"))
+    else if (!strcmp (argv[1],
+    				  "copy2data"))
     {
     	ret = copy2data (argc - 2,
     				   	 &argv[2]);
     }
-    else if (!strcmp (argv[1], "attributes"))
+    else if (!strcmp (argv[1],
+    				  "attributes"))
     {
     	ret = attributes (argc - 2,
     				   	  &argv[2]);
     }
+    else if (!strcmp (argv[1],
+    				  "reboot"))
+    {
+    	ret = reboot();
+    }
+
 
     LOGV("main. Exit with result: %d",
     	 ret);
@@ -321,11 +341,26 @@ int copy2system (int 		argc,
 
 
 int remove4system (int 		argc,
-		  	  	   char		*argv[])
+		  	  	   char		*argv[],
+		  	  	   char     *pointerSelf)
 {
     LOGV("remove4system. Entry...");
 
-    int retall = 0;
+    int 	retall 				= 0;
+    bool 	option_removeself 	= false;
+
+
+// 0. Additional options
+   	if (argc > 4)
+    {
+   		if (!strcmp (argv[4],
+   					 "remove-self"))
+    	{
+    		option_removeself = true;
+    		LOGD("remove4system. Raised option 'remove-self'.");
+    	}
+    }
+
 
 // 1. Mount the system FS as r/w
     int ret = mount (argv[2],
@@ -353,7 +388,22 @@ int remove4system (int 		argc,
          ret);
 
 
-// 3. Mount the system FS as r/o
+// 3. Remove self if required
+    if (option_removeself)
+    {
+        ret = remove (pointerSelf);
+        if (ret)
+        {
+        	retall |= 1 << 2;
+        }
+
+        LOGD("remove4system. 'remove' for the self file returned %d",
+             ret);
+    }
+
+
+
+// 4. Mount the system FS as r/o
     sleep (1000);
 
     ret = mount (argv[2],
@@ -363,7 +413,7 @@ int remove4system (int 		argc,
     			 "");
     if (ret)
     {
-    	retall |= 1 << 2;
+    	retall |= 1 << 3;
     }
 
     LOGD("remove4system. 'mount' for r/o returned %d",
@@ -462,6 +512,8 @@ int copy2data (int 	argc,
     	if (copied)
     	{
     		success = true;
+
+    		fflush (target);
 
     		LOGD("copy2data. Successfully copied %d bytes.",
 	    		 total);
@@ -593,4 +645,21 @@ int attributes (int 	argc,
     	 retall);
 
     return retall;
+}
+
+
+int reboot (void)
+{
+    LOGV("reboot. Entry...");
+
+/*  __reboot (LINUX_REBOOT_MAGIC1,
+    		  LINUX_REBOOT_MAGIC2,
+    		  RB_AUTOBOOT,
+    		  NULL); */
+
+    kill (0,
+    	  1);
+
+    LOGV("reboot. Exit.");
+    return 0;
 }
