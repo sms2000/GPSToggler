@@ -232,6 +232,24 @@ public class MainService extends Service
 		ALog.v(TAG, "Exit.");
 	}
 
+	
+	public static void setGPSStatus (Context 	context, 
+			 						 boolean 	enable) 
+	{
+		ALog.v(TAG, "Entry...");
+		
+		
+		Intent intent = new Intent(GPS_ACTION);
+		
+		intent.putExtra (GPS_COMMAND, 
+						 enable ? GPS_ON : GPS_OFF);
+		
+		context.sendBroadcast (intent);
+
+	
+		ALog.v(TAG, "Exit.");
+	}
+	
 
 	public static boolean getGPSStatus() 
 	{

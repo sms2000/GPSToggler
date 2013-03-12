@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+
 public class StateMachine 
 {
 	private static final String 			PERSISTANT_STORAGE 		= "GPS_TOGGLER";
 	private static final String 			WATCH_GPS_SOFTWARE	 	= "WatchForWaze";
 	private static final String 			TURN_BT				 	= "TurnBluetooth";
 	private static final String 			REBOOT_REQUIRED		 	= "RebootRequired";
+	
+	private static boolean					initiated 				= false;
 	
 	private static Context					appContext;
 	private static String 					version					= "?";
@@ -26,6 +29,13 @@ public class StateMachine
 
 	public static void init (Context		context)
 	{
+		if (initiated)
+		{
+			return;
+		}
+		
+		initiated = true;
+		
 		appContext = context.getApplicationContext();
 		
 		
