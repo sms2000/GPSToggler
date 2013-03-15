@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.app.Activity;
 import android.app.ActivityManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ogp.gpstoggler.log.ALog;
@@ -13,17 +14,26 @@ public class WatchdogThread extends Thread
 {
 	private static final String		TAG								= "WatchdogThread";
 	
-	private static final long 		WATCHDOG_OFF	 				= 2000;
-	private static final long 		WATCHDOG_ON	 					= 5000;
-	private static final String		WAZE_PROCESS 					= "com.waze";
-	private static final String		IGO_PROCESS 					= "com.navngo.igo";
-	private static final String		MAPS_PROCESS 					= "com.google.android.apps.maps";
+	private static final long 		WATCHDOG_OFF	 				= 2000;	// Polling time (ms) when off
+	private static final long 		WATCHDOG_ON	 					= 5000; // Polling time (ms) when on
+	private static final long 		LAZY_START 						= 5000; // Lazy start 
+	
+	private static List<String>		listOfApps						= new ArrayList<String>();
 	
 	private MainService				mainService;
 	private ActivityManager 		activityManager;
 	private boolean					runThread;
 	private boolean					statusSaved 					= false;
 	private Handler					handler							= new Handler();
+	private long 					startTime;
+	
+	
+	static
+	{
+		listOfApps.add ("com.waze");
+		listOfApps.add ("com.navngo.igo");
+		listOfApps.add ("com.google.android.apps.maps");
+	}
 	
 	
 	private class StatusChange implements Runnable
@@ -60,6 +70,8 @@ public class WatchdogThread extends Thread
 		this.mainService		= mainService;
 		this.runThread			= true;
 		this.activityManager	= (ActivityManager)mainService.getSystemService (Activity.ACTIVITY_SERVICE);
+		this.startTime			= System.currentTimeMillis();
+		
 		
 		start();
 
@@ -93,7 +105,11 @@ public class WatchdogThread extends Thread
 
 		while (runThread)
 		{
-			verifyWazeRunning();
+			if (System.currentTimeMillis() - startTime > LAZY_START)
+			{
+				verifyWazeRunning();
+			}
+			
 			
 			try 
 			{
@@ -112,21 +128,32 @@ public class WatchdogThread extends Thread
 	{
 		List<ActivityManager.RunningAppProcessInfo> list = activityManager.getRunningAppProcesses();
 		boolean										statusNow	= false;
+		String										found		= null;
 		
 		
 		for (ActivityManager.RunningAppProcessInfo iterator : list)
 		{
-			if (iterator.processName.contains (WAZE_PROCESS)
-				||
-				iterator.processName.contains (IGO_PROCESS)
-				||
-				iterator.processName.contains (MAPS_PROCESS))
+			if (ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND >= iterator.importance)
 			{
-				if (ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND >= iterator.importance)
+				synchronized(listOfApps)
 				{
-					statusNow = true;
-					break;
+					for (String iterator2 : listOfApps)
+					{
+						if (iterator.processName.contains (iterator2)) 
+						{
+							found = iterator2;
+							ALog.i(TAG, "GPS status active due to foreground process: " + found);
+							break;
+						}
+					}
 				}
+			}
+			
+			
+			if (null != found)
+			{
+				statusNow = true;
+				break;
 			}
 		}
 

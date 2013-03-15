@@ -220,14 +220,15 @@ public class MainService extends Service
 	{
 		ALog.v(TAG, "Entry...");
 		
-		
 		Intent intent = new Intent(GPS_ACTION);
 		
 		intent.putExtra (GPS_COMMAND, 
-						 currentGPSStatus ? GPS_OFF : GPS_ON);
+						 getGPSStatus() ? GPS_OFF : GPS_ON);
 		
 		context.sendBroadcast (intent);
 
+		setGPSStatus (!getGPSStatus());
+		
 	
 		ALog.v(TAG, "Exit.");
 	}
@@ -238,7 +239,6 @@ public class MainService extends Service
 	{
 		ALog.v(TAG, "Entry...");
 		
-		
 		Intent intent = new Intent(GPS_ACTION);
 		
 		intent.putExtra (GPS_COMMAND, 
@@ -246,7 +246,8 @@ public class MainService extends Service
 		
 		context.sendBroadcast (intent);
 
-	
+		setGPSStatus (enable);
+		
 		ALog.v(TAG, "Exit.");
 	}
 	
@@ -256,6 +257,12 @@ public class MainService extends Service
 		return currentGPSStatus;
 	}
 
+	
+	public static void setGPSStatus (boolean status) 
+	{
+		currentGPSStatus = status;
+	}
+	
 
 	public static boolean isGPSDecided() 
 	{
@@ -409,7 +416,7 @@ public class MainService extends Service
     				     GPS_REFRESH);
     	
     	intent.putExtra (GPS_STATUS, 
-    					 currentGPSStatus ? 1 : 0);
+    					 getGPSStatus() ? 1 : 0);
     	
     	sendBroadcast (intent);
     	
@@ -443,10 +450,9 @@ public class MainService extends Service
 		}	
 			
 			
-		currentGPSStatus  = newStatus;
 		currentGPSDecided = true;
 
-		ALog.d(TAG, "GPS now " + (currentGPSStatus ? "on" : "off"));
+		ALog.d(TAG, "Real GPS status now " + (newStatus ? "on" : "off"));
 	}
 
 
@@ -468,17 +474,19 @@ public class MainService extends Service
 		{
 			if (gpsSoftwareStatus 
 				&& 
-				!currentGPSStatus)
+				!getGPSStatus())
 			{
-				swapGPSStatus (this);
+				setGPSStatus (this, 
+							  true);
 				
 				ALog.i(TAG, "Attempt to activate GPS.");
 			}
 			else if (!gpsSoftwareStatus 
 					 && 
-					 currentGPSStatus)
+					 getGPSStatus())
 			{
-				swapGPSStatus (this);
+				setGPSStatus (this, 
+						  	  false);
 	
 				ALog.i(TAG, "Attempt to deactivate GPS.");
 			}
@@ -496,7 +504,7 @@ public class MainService extends Service
 		{
 			BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
 
-			if (currentGPSStatus)
+			if (getGPSStatus())
 			{
 				if (null != btAdapter 
 					&& 
