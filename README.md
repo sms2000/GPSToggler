@@ -11,6 +11,13 @@ It requires the 'su' privilegies only during the very first run (reboot is still
 
 Versions:
 
+0.16
+----
+
+Improved (up to some level) the recognition of running GPS software and especially the finishing of the run.
+Little log improvement for above process.
+
+
 0.15
 ----
 
