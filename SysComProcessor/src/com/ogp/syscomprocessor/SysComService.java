@@ -262,6 +262,7 @@ public class SysComService extends Service
 		    	command += " " + SYSTEM_FS; 
 		    	command += " " + sysFS.mDevice; 
 		    	command += " " + sysFS.mType; 
+		    	command += " " + "remove-self";
 		    	command += "\n"; 
 
 			    ALog.w(TAG, "This must be the last print. Any diagnostics printed after this line is errorneous!");
