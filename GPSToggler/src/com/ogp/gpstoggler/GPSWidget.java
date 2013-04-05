@@ -104,7 +104,6 @@ public class GPSWidget extends AppWidgetProvider
 
     	RemoteViews updateViews = new RemoteViews(context.getPackageName(), 
 				  								  R.layout.widget_layout);
-
     	
     	Drawable drawable = context.getResources().getDrawable (getResIdByStatus());
         Bitmap 	 bitmap	  = ((BitmapDrawable)drawable).getBitmap();
@@ -135,8 +134,6 @@ public class GPSWidget extends AppWidgetProvider
         						 updateViews);
 
         ALog.w(TAG, "updateAppWidget invoked.");
-
-        
         ALog.v(TAG, "Exit.");
 	}
 
@@ -149,7 +146,14 @@ public class GPSWidget extends AppWidgetProvider
 		}
 		else
 		{
-			return MainService.getGPSStatus() ? R.drawable.gps_on : R.drawable.gps_off;
+			if (StateMachine.getWatchGPSSoftware())
+			{
+				return R.drawable.gps_control;
+			}
+			else
+			{
+				return MainService.getGPSStatus() ? R.drawable.gps_on : R.drawable.gps_off;
+			}
 		}
 	}
     
