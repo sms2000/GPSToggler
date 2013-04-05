@@ -184,8 +184,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 
         registerReceiver (broadcastReceiver, 
         				  intentFilter);
-        
-        updateUninstall();
 	}
 	
 	
@@ -307,6 +305,8 @@ public class MainActivity extends Activity implements OnEndOfTask
 
 		StateMachine.setWatchGPSSoftware (((CheckBox)view).isChecked());
 		StateMachine.writeToPersistantStorage();
+		
+		MainService.updateWidgets (getApplicationContext());
 		
 		ALog.v(TAG, "Exit.");
 	}
@@ -581,7 +581,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 	}
 
 	
-
 	private void rebootAndroid()
 	{
 		ALog.v(TAG, "Entry...");
@@ -614,7 +613,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 
 		ALog.v(TAG, "Exit.");
 	}
-
+	
 	
 	@Override
 	public void onEndOfTask (TaskIndex 	task, 
@@ -637,8 +636,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 			{
 				StateMachine.setRebootRequired (true);
 				StateMachine.writeToPersistantStorage();
-
-				showRebootDialog();
+ 				showRebootDialog();
 			}
 			else
 			{
@@ -756,7 +754,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 		dialog.show();
 	}
 
-
+	
 	private void fatalError() 
 	{
 		ALog.e(TAG, "---------- FATAL ERROR ----------");
@@ -828,14 +826,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 		} 
 		
 		return false;
-	}
-	
-	
-	private void updateUninstall()
-	{
-		View uninstallButton = this.findViewById (R.id.uninstall);
-		
-		uninstallButton.setEnabled (isSystemModuleExists());
 	}
 	
 	

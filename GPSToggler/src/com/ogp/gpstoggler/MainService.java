@@ -81,12 +81,12 @@ public class MainService extends Service
 
 	
 																	
-	private class ProocessSingleClick implements Runnable
+	private class ProcessSingleClick implements Runnable
 	{
 		private Context applicationContext;
 		
 		
-		public ProocessSingleClick(Context applicationContext) 
+		public ProcessSingleClick(Context applicationContext) 
 		{
 			this.applicationContext = applicationContext;
 		}
@@ -312,6 +312,19 @@ public class MainService extends Service
 	}
 
 	
+	public static void updateWidgets (Context applicationContext) 
+	{
+		ALog.v(TAG, "Entry...");
+
+		if (null != thisService)
+		{
+			thisService.updateWidget();
+		}
+
+		ALog.v(TAG, "Exit.");
+	}
+
+	
 	private void processClickOverWidget (Context applicationContext) 
 	{
 		ALog.v(TAG, "Entry...");
@@ -321,7 +334,7 @@ public class MainService extends Service
 			firstClickTime = System.currentTimeMillis();
 			ALog.d(TAG, "First click registered at " + firstClickTime);
 			
-			messageHandler.postDelayed (new ProocessSingleClick(applicationContext),
+			messageHandler.postDelayed (new ProcessSingleClick(applicationContext),
 										DOUBLE_CLICK_DELAY);
 		}
 		else 
@@ -349,7 +362,11 @@ public class MainService extends Service
 		else
 		{
 			firstClickTime = 0;
-			swapGPSStatus (applicationContext);
+			
+			if (!StateMachine.getWatchGPSSoftware())
+			{
+				swapGPSStatus (applicationContext);
+			}
 
 			ALog.d(TAG, "Single click activated.");
 		}

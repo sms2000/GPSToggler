@@ -19,7 +19,8 @@
 
 	<string name="error">Error</string>
 	<string name="warning">Warning</string>
-	
+	<string name="success">Success</string>
+		
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
 	<string name="yes">Yes</string>
@@ -39,7 +40,8 @@
 	<string name="busybox">This application requires \'BusyBox\'. Do you want to install?</string>
 	<string name="install_module">This application need to install a module into the system area.\nInstall?</string>
 	<string name="move_success">The application successfully moved the module to /system/data area.\nReboot now?</string>
-	<string name="move_error">The application failed to move the module to /system/data area.\nAppparently you cannot use it as desired.\nSorry...</string>
+	<string name="move_success2">The application successfully moved the module to /system/data area.\nFinishing...</string>
+	<string name="move_error">The application failed to move the module to /system/data area.\nAppparently you have not rooted your device or the Superuser application needs to \'forget\' the GPSToggler.</string>
 	<string name="fatal_error">The application encounterd a fatal error.\nSorry...</string>
 
 	<string name="verison_format">Version: %s</string>

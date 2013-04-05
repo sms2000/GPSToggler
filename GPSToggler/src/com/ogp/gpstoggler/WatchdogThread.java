@@ -105,7 +105,9 @@ public class WatchdogThread extends Thread
 
 		while (runThread)
 		{
-			if (System.currentTimeMillis() - startTime > LAZY_START)
+			if (StateMachine.getWatchGPSSoftware() 
+				&& 
+				System.currentTimeMillis() - startTime > LAZY_START)
 			{
 				verifyWazeRunning();
 			}
