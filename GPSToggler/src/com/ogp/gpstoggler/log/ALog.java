@@ -17,13 +17,9 @@ public class ALog
 	public static void e (String 	tag, 
 				   		  String 	message) 
 	{
-		StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
-		if (callStack.length < 4)
+		try
 		{
-			Log.e(tag, message);
-		}
-		else
-		{
+			StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
 			String file = getFileName (callStack[3].getFileName());
 			String text = String.format ("%s::%d (%s)  %s", 
 										 file, 
@@ -33,19 +29,19 @@ public class ALog
 			
 			Log.e(mainTag, text);
 		}
+		catch(Exception e)
+		{
+			Log.e(tag, message);
+		}
 	}
 	
 	
 	public static void w (String 	tag, 
 				   		  String 	message) 
 	{
-		StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
-		if (callStack.length < 4)
+		try
 		{
-			Log.w(tag, message);
-		}
-		else
-		{
+			StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
 			String file = getFileName (callStack[3].getFileName());
 			String text = String.format ("%s::%d (%s)  %s", 
 										 file, 
@@ -55,19 +51,19 @@ public class ALog
 			
 			Log.w(mainTag, text);
 		}
+		catch(Exception e)
+		{
+			Log.w(tag, message);
+		}
 	}
 	
 	
 	public static void i (String 	tag, 
 				   		  String 	message) 
 	{
-		StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
-		if (callStack.length < 4)
+		try
 		{
-			Log.i(tag, message);
-		}
-		else
-		{
+			StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
 			String file = getFileName (callStack[3].getFileName());
 			String text = String.format ("%s::%d (%s)  %s", 
 										 file, 
@@ -77,19 +73,19 @@ public class ALog
 			
 			Log.i(mainTag, text);
 		}
+		catch(Exception e)
+		{
+			Log.i(tag, message);
+		}
 	}
 	
 	
 	public static void d (String 	tag, 
 				   		  String 	message) 
 	{
-		StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
-		if (callStack.length < 4)
+		try
 		{
-			Log.d(tag, message);
-		}
-		else
-		{
+			StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
 			String file = getFileName (callStack[3].getFileName());
 			String text = String.format ("%s::%d (%s)  %s", 
 										 file, 
@@ -99,19 +95,19 @@ public class ALog
 			
 			Log.d(mainTag, text);
 		}
+		catch(Exception e)
+		{
+			Log.d(tag, message);
+		}
 	}
 	
 	
 	public static void v (String 	tag, 
 				   		  String 	message) 
 	{
-		StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
-		if (callStack.length < 4)
+		try
 		{
-			Log.v(tag, message);
-		}
-		else
-		{
+			StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
 			String file = getFileName (callStack[3].getFileName());
 			String text = String.format ("%s::%d (%s)  %s", 
 										 file, 
@@ -120,6 +116,10 @@ public class ALog
 										 message);  
 			
 			Log.v(mainTag, text);
+		}
+		catch(Exception e)
+		{
+			Log.v(tag, message);
 		}
 	}
 

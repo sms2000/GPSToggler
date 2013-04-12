@@ -289,11 +289,11 @@ public class MainService extends Service
 	}
 
 	
-	public void reportGPSSoftwareStatus (boolean wazeExists) 
+	public void reportGPSSoftwareStatus (boolean gpsSoftwareRunning) 
 	{
-		if (gpsSoftwareStatus != wazeExists)
+		if (gpsSoftwareStatus != gpsSoftwareRunning)
 		{
-			gpsSoftwareStatus = wazeExists;
+			gpsSoftwareStatus = gpsSoftwareRunning;
 			activateGPSForSoftware();
 		}
 	}
@@ -489,24 +489,10 @@ public class MainService extends Service
 		
 		if (StateMachine.getWatchGPSSoftware())
 		{
-			if (gpsSoftwareStatus 
-				&& 
-				!getGPSStatus())
-			{
-				setGPSStatus (this, 
-							  true);
+			setGPSStatus (this, 
+						  gpsSoftwareStatus);
 				
-				ALog.i(TAG, "Attempt to activate GPS.");
-			}
-			else if (!gpsSoftwareStatus 
-					 && 
-					 getGPSStatus())
-			{
-				setGPSStatus (this, 
-						  	  false);
-	
-				ALog.i(TAG, "Attempt to deactivate GPS.");
-			}
+			ALog.i(TAG, "Attempt to " + (gpsSoftwareStatus ? "activate GPS." : "deactivate GPS."));
 		}
 		
 		ALog.v(TAG, "Exit.");

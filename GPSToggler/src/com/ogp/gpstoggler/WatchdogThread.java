@@ -53,7 +53,7 @@ public class WatchdogThread extends Thread
 			try
 			{
 				mainService.reportGPSSoftwareStatus (enableGPS);
-				ALog.v(TAG, "reportWazeStatus succeeded for " + enableGPS);
+				ALog.v(TAG, "reportGPSSoftwareStatus succeeded for " + enableGPS);
 			}
 			catch(Exception e)
 			{
@@ -109,7 +109,7 @@ public class WatchdogThread extends Thread
 				&& 
 				System.currentTimeMillis() - startTime > LAZY_START)
 			{
-				verifyWazeRunning();
+				verifyGPSSoftwareRunning();
 			}
 			
 			
@@ -126,7 +126,7 @@ public class WatchdogThread extends Thread
 	}
 
 
-	private void verifyWazeRunning() 
+	private void verifyGPSSoftwareRunning() 
 	{
 		List<ActivityManager.RunningAppProcessInfo> list = activityManager.getRunningAppProcesses();
 		boolean										statusNow	= false;
