@@ -18,3 +18,10 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep public class com.ogp.syscomprocessor.log.ALog {
+}	
+
+-keepclassmembers public class com.ogp.syscomprocessor.log.ALog {
+	public *;
+}
