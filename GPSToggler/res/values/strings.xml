@@ -51,5 +51,7 @@
     
     <string name="notification_text">Add notification icon and bring the service to the foreground.</string>
     <string name="use_notification">Notification active</string>
-		
+    
+    <string name="wait_reboot">Rebooting...</string>
+    		
 </resources>

@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity implements OnEndOfTask 
@@ -39,6 +40,8 @@ public class MainActivity extends Activity implements OnEndOfTask
 	private static final String 		MODULE_STUB				= "libscp.so";
 	private static final String 		MODULE_NAME 			= "SysComProcessor.apk";
 	private static final String 		NATIVE_RUNNER			= "liboperator.so";
+
+	private static final long 			REBOOT_WAIT 			= 3000;		// 3 seconds
 	
 	private Button						button;
 	private CheckBox					watchWaze;
@@ -49,6 +52,15 @@ public class MainActivity extends Activity implements OnEndOfTask
 	private BroadcastReceiver 			broadcastReceiver;
 	private boolean						currentGPSStatus		= false;
 
+	
+	private class Reboot implements Runnable
+	{
+		@Override
+		public void run() 
+		{
+			rebootAndroid();
+		}
+	}
 	
 	private class MoverThread extends Thread
 	{
@@ -597,6 +609,16 @@ public class MainActivity extends Activity implements OnEndOfTask
 	}
 
 	
+	private void rebootAndroidWait()
+	{
+		Toast.makeText(this, 
+					   R.string.wait_reboot, 
+					   Toast.LENGTH_SHORT).show();
+		
+		handler.postDelayed (new Reboot(), 
+							 REBOOT_WAIT);
+	}
+	
 	private void rebootAndroid()
 	{
 		ALog.v(TAG, "Entry...");
@@ -627,6 +649,8 @@ public class MainActivity extends Activity implements OnEndOfTask
 			e.printStackTrace();
 		}
 
+		finish();
+		
 		ALog.v(TAG, "Exit.");
 	}
 	
@@ -752,8 +776,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 				StateMachine.setRebootRequired (false);
 				StateMachine.writeToPersistantStorage();
 
-				rebootAndroid();
-				finish();
+				rebootAndroidWait();
 			}
 		});
 
