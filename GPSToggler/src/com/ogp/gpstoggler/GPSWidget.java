@@ -133,6 +133,8 @@ public class GPSWidget extends AppWidgetProvider
         manager.updateAppWidget (thisWidget, 
         						 updateViews);
 
+        MainService.setServiceForeground();
+        
         ALog.w(TAG, "updateAppWidget invoked.");
         ALog.v(TAG, "Exit.");
 	}

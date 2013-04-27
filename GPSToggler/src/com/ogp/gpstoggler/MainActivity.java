@@ -299,6 +299,19 @@ public class MainActivity extends Activity implements OnEndOfTask
 	}
 	
 	
+	public void clickNotification (View view)
+	{
+		ALog.v(TAG, "Entry...");
+
+		StateMachine.setUseNotification (((CheckBox)view).isChecked());
+		StateMachine.writeToPersistantStorage();
+
+		MainService.setServiceForeground();
+		
+		ALog.v(TAG, "Exit.");
+	}
+	
+	
 	public void clickWatchWaze (View view)
 	{
 		ALog.v(TAG, "Entry...");

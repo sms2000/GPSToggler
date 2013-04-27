@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.ogp.gpstoggler.log.ALog;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -162,10 +164,30 @@ public class MainService extends Service
 		
 		initWatchdogThread (true);
 		
+		setItForeground();
 		
 		ALog.v(TAG, "Exit.");
 	}
 
+	
+	@Override
+	public int onStartCommand (Intent 	intent, 
+							   int 		flags, 
+							   int 		startId)
+	{
+		int result = super.onStartCommand (intent, 
+										   flags, 
+										   startId);
+
+		if (START_NOT_STICKY == result)
+		{
+			result = START_STICKY;
+		}
+		
+		
+		return result;
+	}
+	
 
 	@Override
 	public void onDestroy()
@@ -201,6 +223,82 @@ public class MainService extends Service
 		thisService = this;
 
     	ALog.v(TAG, "Exit.");
+	}
+	
+	
+	public static void setServiceForeground()
+	{
+		try
+		{
+			thisService.setItForeground();
+		}
+		catch(Exception e)
+		{
+		}
+	}
+	
+	
+	private void setItForeground()
+	{
+		if (StateMachine.getUseNotification())
+		{
+			Notification note = new Notification(getResIdByStatus(),
+												 getResources().getString (R.string.notify),
+												 System.currentTimeMillis());
+	
+			Intent intent = new Intent(this, 
+				 					   MainActivity.class);
+	
+			intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP 	| 
+							 Intent.FLAG_ACTIVITY_SINGLE_TOP 	| 
+							 Intent.FLAG_ACTIVITY_NEW_TASK);
+	
+			PendingIntent pi = PendingIntent.getActivity (this, 
+				 									   	  0,
+				 									   	  intent, 
+				 									   	  0);
+	
+			note.setLatestEventInfo (this, 
+									 getResources().getString (R.string.app_name),
+									 getResources().getString (R.string.notify_active),
+				 				  	 pi); 
+			 
+			startForeground (1, 
+				  	 		 note);
+				
+			ALog.d(TAG, "setItForeground. Bringing the service foreground...");
+		}
+		else
+		{
+			try
+			{
+				stopForeground (true);
+		    	ALog.d(TAG, "setItForeground. Bringing the service background...");
+			}
+			catch(Exception e)
+			{
+			}
+		}
+	}
+
+	
+	private static int getResIdByStatus() 
+	{
+		if (!MainService.isGPSDecided())
+		{
+			return R.drawable.gps_unknown;
+		}
+		else
+		{
+			if (StateMachine.getWatchGPSSoftware())
+			{
+				return R.drawable.gps_control;
+			}
+			else
+			{
+				return MainService.getGPSStatus() ? R.drawable.gps_on : R.drawable.gps_off;
+			}
+		}
 	}
 	
 	

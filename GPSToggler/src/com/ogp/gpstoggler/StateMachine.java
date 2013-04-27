@@ -11,6 +11,7 @@ public class StateMachine
 	private static final String 			WATCH_GPS_SOFTWARE	 	= "WatchForWaze";
 	private static final String 			TURN_BT				 	= "TurnBluetooth";
 	private static final String 			REBOOT_REQUIRED		 	= "RebootRequired";
+	private static final String 			USE_NOTIFICATION	 	= "UseNotification";
 	
 	private static boolean					initiated 				= false;
 	
@@ -20,6 +21,7 @@ public class StateMachine
 	
 	private static boolean 					watchForGPSSoftware;
 	private static boolean 					turnBT;
+	private static boolean 					useNotification;
 		
 	
 	private StateMachine()
@@ -42,6 +44,7 @@ public class StateMachine
 // Defaults
 		watchForGPSSoftware	= false;
 		turnBT				= false;
+		useNotification		= false;
 		
 		readFromPersistantStorage();
 	}
@@ -56,6 +59,7 @@ public class StateMachine
 		
 		watchForGPSSoftware 	= pref.getBoolean 	(WATCH_GPS_SOFTWARE, 	watchForGPSSoftware);
 		turnBT					= pref.getBoolean 	(TURN_BT, 				turnBT);
+		useNotification			= pref.getBoolean 	(USE_NOTIFICATION, 		useNotification);
 	}
 
 	
@@ -70,6 +74,7 @@ public class StateMachine
 
 		editor.putBoolean	(WATCH_GPS_SOFTWARE, 	watchForGPSSoftware);
 		editor.putBoolean	(TURN_BT, 				turnBT);
+		editor.putBoolean	(USE_NOTIFICATION, 		useNotification);
 		
 		editor.commit();
 	}
@@ -88,4 +93,8 @@ public class StateMachine
 
 	public static boolean 	getRebootRequired			() 				{return rebootRequired;}
 	public static void		setRebootRequired			(boolean value)	{rebootRequired = value;}
+
+
+	public static boolean 	getUseNotification			() 				{return useNotification;}
+	public static void		setUseNotification			(boolean value)	{useNotification = value;}
 }

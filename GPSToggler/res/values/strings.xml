@@ -45,4 +45,11 @@
 	<string name="fatal_error">The application encounterd a fatal error.\nSorry...</string>
 
 	<string name="verison_format">Version: %s</string>
+    
+    <string name="notify">GPSToggler active...</string> 
+    <string name="notify.active">Active...</string> 
+    
+    <string name="notification_text">Add notification icon and bring the service to the foreground.</string>
+    <string name="use_notification">Notification active</string>
+		
 </resources>

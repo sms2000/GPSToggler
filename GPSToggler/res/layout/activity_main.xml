@@ -26,7 +26,6 @@
 	    <TextView
 	        android:id="@+id/version"
 	        android:layout_marginTop="5dp"
-	        android:onClick="clickButton"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:text="" />
@@ -42,7 +41,6 @@
 	    <TextView
 	        android:id="@+id/btText"
 	        android:layout_marginTop="20dp"
-	        android:onClick="clickButton"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:text="@+string/bt_text" />
@@ -54,6 +52,21 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="@+string/switch_bt" />
+	    
+	    <TextView
+	        android:id="@+id/notificationText"
+	        android:layout_marginTop="20dp"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/notification_text" />
+	    
+	    <CheckBox
+	        android:id="@+id/notification"
+	        android:layout_marginTop="20dp"
+	        android:onClick="clickNotification"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/use_notification" />
 	    
 	    <Button
 	        android:id="@+id/button"
