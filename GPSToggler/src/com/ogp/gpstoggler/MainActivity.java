@@ -43,6 +43,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	private Button						button;
 	private CheckBox					watchWaze;
 	private CheckBox					turnBT;
+	private CheckBox					useNotification;
 	private ServiceConnection 			serviceConnection;
 	private Handler						handler					= new Handler();
 	private BroadcastReceiver 			broadcastReceiver;
@@ -131,10 +132,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 																	  null);
 		setContentView (viewGroup);
 
-		button 		= (Button)viewGroup.findViewById   (R.id.button);
-		watchWaze	= (CheckBox)viewGroup.findViewById (R.id.waze);
-		turnBT		= (CheckBox)viewGroup.findViewById (R.id.bt);
-
+		button 			= (Button)viewGroup.findViewById   (R.id.button);
+		watchWaze		= (CheckBox)viewGroup.findViewById (R.id.waze);
+		turnBT			= (CheckBox)viewGroup.findViewById (R.id.bt);
+		useNotification	= (CheckBox)viewGroup.findViewById (R.id.notification);
+				
 		StateMachine.init (this);
 		VersionXMLParser.printVersion (this);
 
@@ -142,9 +144,10 @@ public class MainActivity extends Activity implements OnEndOfTask
 		verText.setText (String.format (getResources().getString (R.string.verison_format), 
 										StateMachine.getVersion()));
 
-		watchWaze.setChecked (StateMachine.getWatchGPSSoftware());
-		turnBT.	  setChecked (StateMachine.getTurnBT());
-
+		watchWaze.		setChecked (StateMachine.getWatchGPSSoftware());
+		turnBT.	  		setChecked (StateMachine.getTurnBT());
+		useNotification.setChecked (StateMachine.getUseNotification());
+		
 		ALog.v(TAG, "Exit.");
 	}
 
