@@ -11,6 +11,14 @@ It requires the 'su' privilegies only during the very first run (reboot is still
 
 Versions:
 
+0.19
+----
+
+The log is simplified.
+THe main service is self-repairing after Android killed it.
+Optional notification and icon added.
+
+
 0.16
 ----
 
