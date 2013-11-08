@@ -401,12 +401,13 @@ public class MainActivity extends Activity implements OnEndOfTask
 		{
 			String sourceString = getApplicationInfo().nativeLibraryDir + "/" + MODULE_STUB;
 			
-			sourceInput = new FileInputStream(new File(sourceString));
+			sourceInput = new FileInputStream(sourceString);
 			
 			sourceDigest = computeDigest (sourceInput); 
 		} 
 		catch (Exception e) 
 		{
+			ALog.e(TAG, "EXC(1)");
 		}
 		
 		if (null == sourceDigest)
@@ -417,23 +418,31 @@ public class MainActivity extends Activity implements OnEndOfTask
 		}
 
 
-		boolean comparable = true;
-		for (int i = 0; i < targetDigest.length; i++)
+		ALog.v(TAG, String.format ("Original hash: %s", byteArray2String (sourceDigest)));
+		ALog.v(TAG, String.format ("Copied   hash: %s", byteArray2String (targetDigest)));
+		
+		boolean comparable = targetDigest.length == sourceDigest.length;
+		
+		if (comparable) 
 		{
-			try
+			for (int i = 0; i < targetDigest.length; i++)
 			{
-				if (targetDigest[i] != sourceDigest[i])
+				try
 				{
+					if (targetDigest[i] != sourceDigest[i])
+					{
+						comparable = false;
+						break;
+					}
+				}
+				catch(Exception e)
+				{
+					ALog.e(TAG, "EXC(2)");
 					comparable = false;
 					break;
 				}
 			}
-			catch(Exception e)
-			{
-				comparable = false;
-			}
 		}
-
 		
 		if (!comparable)
 		{
@@ -488,8 +497,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 			{
 		    	String 				libDir  = getApplicationInfo().nativeLibraryDir + "/";
 		    	
-		    	Process 			chperm;
-		    	DataOutputStream 	os;
 		    	String 				command;
 		    			
 		    	command  = libDir + NATIVE_RUNNER;
@@ -505,16 +512,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 			    ALog.w(TAG, "Executing command [1]:\n" + command);
 			    ALog.w(TAG, "\n");
 
-		    	chperm 	= Runtime.getRuntime().exec ("su");	// The only one place we actually need SU
-		    	os 		= new DataOutputStream(chperm.getOutputStream());
-
-		    	os.writeBytes (command);
-			    os.flush();
-			    os.writeBytes ("exit\n");
-			    os.flush();
-	
-			    chperm.waitFor(); 				
-			    
+			    flushCommand (command);			    
 			    
 			    command  = XBIN_DIRECTORY + NATIVE_RUNNER;
  		    	command += " " + "copy2system";
@@ -525,13 +523,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 		    	command += " " + sysFS.mType; 
 		    	command += "\n"; 
 
-			    chperm 	= Runtime.getRuntime().exec (command);
-		    	os 		= new DataOutputStream(chperm.getOutputStream());
-
+	
 		    	ALog.w(TAG, "Executing command [2]:\n" + command);
 			    ALog.w(TAG, "\n");
 
-			    chperm.waitFor(); 				
+			    flushCommand (command);
 			    
 			    ALog.w(TAG, "Calling native code succeeded.");
 			    
@@ -566,7 +562,6 @@ public class MainActivity extends Activity implements OnEndOfTask
 		{
 			try
 			{
-		    	Process 			chperm;
 				String 				command;
 				
 			    command  = XBIN_DIRECTORY + NATIVE_RUNNER;
@@ -577,12 +572,10 @@ public class MainActivity extends Activity implements OnEndOfTask
 		    	command += " " + sysFS.mType; 
 		    	command += "\n"; 
 
-			    chperm 	= Runtime.getRuntime().exec (command);
-
 		    	ALog.w(TAG, "Executing command [1]:\n" + command);
 			    ALog.w(TAG, "\n");
 
-			    chperm.waitFor(); 				
+			    flushCommand (command);			    
 				
 			    ALog.w(TAG, "Calling native code succeeded.");
 			    
@@ -625,22 +618,18 @@ public class MainActivity extends Activity implements OnEndOfTask
 		
 		try 
 		{
-	    	Process 			chperm;
 			String 				command;
 			
 		    command  = XBIN_DIRECTORY + NATIVE_RUNNER;
 	    	command += " " + "reboot";
 	    	command += "\n"; 
 
-		    chperm 	= Runtime.getRuntime().exec (command);
-
 	    	ALog.w(TAG, "Executing command [1]:\n" + command);
 		    ALog.w(TAG, "\n");
 
-		    chperm.waitFor(); 				
+		    flushCommand (command);			    
 			
 		    ALog.w(TAG, "Calling native code succeeded.");
-		    
 			ALog.w(TAG, "Rebooting...");
 		}
 		catch(Exception e)
@@ -874,5 +863,59 @@ public class MainActivity extends Activity implements OnEndOfTask
 		
 
 		ALog.v(TAG, "Exit.");
+	}
+
+
+	private Object byteArray2String (byte[] array) 
+	{
+		String str = new String();
+		
+		for (int i = 0; i < array.length; i++)
+		{
+			int bt = array[i] & 0x0F;
+			
+			if (bt > 9)
+			{
+				str += 'A' + bt - 10;
+			}
+			else
+			{
+				str += '0' + bt;
+			}
+			
+			bt = array[i] >> 4;
+
+			if (bt > 9)
+			{
+				str += 'A' + bt - 10;
+			}
+			else
+			{
+				str += '0' + bt;
+			}
+			
+		}
+		
+		return str;
+	}
+	
+
+	private void flushCommand (String command)
+	{
+		try
+		{
+	    	Process chperm = Runtime.getRuntime().exec ("su");	// The only one place we actually need SU
+			DataOutputStream os = new DataOutputStream(chperm.getOutputStream());
+			
+			os.writeBytes (command);
+		    os.flush();
+		    os.writeBytes ("exit\n");
+		    os.flush();
+
+		    chperm.waitFor();  				
+		}
+		catch(Exception e)
+		{
+		}
 	}
 }

@@ -31,8 +31,11 @@ public class WatchdogThread extends Thread
 	static
 	{
 		listOfApps.add ("com.waze");
-		listOfApps.add ("com.navngo.igo");
 		listOfApps.add ("com.google.android.apps.maps");
+		
+		listOfApps.add ("com.navngo.");
+		listOfApps.add ("com.nng.");
+		
 	}
 	
 	

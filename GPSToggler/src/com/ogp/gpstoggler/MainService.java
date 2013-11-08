@@ -35,7 +35,7 @@ public class MainService extends Service
 	public static final String 			GPS_REFRESH				= "refreshGPSStatus";
 
 	private static final long 			DOUBLE_CLICK_DELAY 		= 300;			// 300 ms
-		
+	private static final long 			SCREEN_OFF_DELAY		= 5000;			// 5 seconds		
 	
 	private static MainService			thisService				= null;
 	private static boolean 				currentGPSDecided		= false;
@@ -238,6 +238,7 @@ public class MainService extends Service
 	}
 	
 	
+	@SuppressWarnings("deprecation")
 	private void setItForeground()
 	{
 		if (StateMachine.getUseNotification())
@@ -374,7 +375,8 @@ public class MainService extends Service
 
 		try
 		{
-			thisService.messageHandler.post (thisService.new ScreenStatusChanged (status));
+			thisService.messageHandler.postDelayed (thisService.new ScreenStatusChanged (status), 
+													status ? 0 : SCREEN_OFF_DELAY);
 
 			ALog.d(TAG, "Post message succeeded.");
 		}
@@ -502,7 +504,9 @@ public class MainService extends Service
 			{
 				watchdogThread.finish();
 				watchdogThread = null;
-			
+
+				currentGPSDecided = false;
+				
 				ALog.d(TAG, "Watchdog thread finished.");
 			}
 		}
