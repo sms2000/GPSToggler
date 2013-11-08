@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/reboot.h>
 #include <linux/stat.h>
+#include <errno.h>
 
 
 #define LOG_TAG    			"SystemController"
@@ -75,12 +76,16 @@ int main (int 		argc,
 {
     LOGV("main. Entry...");
 
-    if (setgid (0)
+    if (setuid (0)
     	||
-    	setuid (0))
+    	setgid (0))
     {
-    	printf ("main. 'root' refused!\n");
-        LOGE("main. 'root' refused!");
+    	printf ("main. 'root' refused! errno: %d/%X\n",
+    			errno,
+    			errno);
+        LOGE("main. 'root' refused! errno: %d/%X\n",
+    		 errno,
+    		 errno);
     }
     else
     {
