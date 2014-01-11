@@ -11,6 +11,24 @@ It requires the 'su' privilegies only during the very first run (reboot is still
 
 Versions:
 
+0.42
+----
+
+1. KitKat 4.4 compatible (verified with Note 2 OmniRom AOSP 4.4.2).
+
+2. Native code reboot implemented as should be.
+
+3. Interface improvements: four types of the icon instead of three. 
+
+
+
+0.40
+----
+
+Fixed (apparently) the known problem with Galaxy Note 2, S3, etc 4.3 ROMs where SU is not well processed. 
+The hotfix is explained in detail in the SU source code.
+
+
 0.19
 ----
 
