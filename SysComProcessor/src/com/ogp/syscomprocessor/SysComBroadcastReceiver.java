@@ -25,18 +25,18 @@ public class SysComBroadcastReceiver extends BroadcastReceiver
 	public void onReceive (Context 		context, 
 						   Intent 		intent) 
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "onReceive. Entry...");
 
 		String action = intent.getAction();  
 		
 		if (null == action)
 		{
-			ALog.d(TAG, "<null> action. Do nothing...");
+			ALog.d(TAG, "onReceive. <null> action. Do nothing...");
 			action = "";
 		}
 		else
 		{
-			ALog.d(TAG, "Action: " + action);
+			ALog.d(TAG, "onReceive. Action: " + action);
 		}
 		
 		
@@ -46,7 +46,7 @@ public class SysComBroadcastReceiver extends BroadcastReceiver
 		}
 		else if (action.equals (ACTION))
 		{
-			ALog.d(TAG, "GPS related action encountered.");
+			ALog.d(TAG, "onReceive. GPS related action encountered.");
 
 			String	command = intent.getStringExtra (COMMAND);
 			if (null != command)
@@ -63,13 +63,13 @@ public class SysComBroadcastReceiver extends BroadcastReceiver
 				
 		}
 		
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "onReceive. Exit.");
 	}
 
 
 	private void turnGpsOn (Context	context) 
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "turnGpsOn. Entry...");
 
 		beforeEnable = Settings.Secure.getString (context.getContentResolver(),
 					  							  Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
@@ -83,18 +83,21 @@ public class SysComBroadcastReceiver extends BroadcastReceiver
 			Settings.Secure.putString (context.getContentResolver(),
 									   Settings.Secure.LOCATION_PROVIDERS_ALLOWED,
 									   newSet);	
+			ALog.i(TAG, "turnGpsOn. New string: " + newSet);
 		}
 		catch(Exception e)
 		{
+			ALog.e(TAG, "turnGpsOn. !!! Exception !!!");
+			e.printStackTrace();
 		}
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "turnGpsOn. Exit.");
 	}
 
 
 	private void turnGpsOff (Context	context) 
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "turnGpsOff. Entry...");
 
 		if (null == beforeEnable)
 		{
@@ -134,11 +137,14 @@ public class SysComBroadcastReceiver extends BroadcastReceiver
 			Settings.Secure.putString (context.getContentResolver(),
 									   Settings.Secure.LOCATION_PROVIDERS_ALLOWED,
 									   beforeEnable);
+			ALog.i(TAG, "turnGpsOff. New string: " + beforeEnable);
 		}
 		catch(Exception e)
 		{
+			ALog.e(TAG, "turnGpsOff. !!! Exception !!!");
+			e.printStackTrace();
 		}
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "turnGpsOff. Exit.");
 	}
 }
