@@ -662,8 +662,10 @@ int reboot (void)
     		  RB_AUTOBOOT,
     		  NULL); */
 
-    kill (0,
-    	  1);
+/*  kill (0,
+    	  1); */
+    sync();
+    reboot (LINUX_REBOOT_CMD_RESTART);
 
     LOGV("reboot. Exit.");
     return 0;
