@@ -293,7 +293,7 @@ public class MainService extends Service
 		{
 			if (StateMachine.getWatchGPSSoftware())
 			{
-				return R.drawable.gps_control;
+				return MainService.getGPSStatus() ? R.drawable.gps_control_on : R.drawable.gps_control_off;
 			}
 			else
 			{

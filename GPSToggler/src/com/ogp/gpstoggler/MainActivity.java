@@ -35,7 +35,8 @@ public class MainActivity extends Activity implements OnEndOfTask
 	private static final String 		TAG 					= "MainActivity";
 
 	private static final String 		SYSTEM_FS		 		= "/system";
-	private static final String 		SYSTEM_DIRECTORY 		= "/system/app/";
+	private static final String 		SYSTEM_DIRECTORY_LEGACY	= "/system/app/";
+	private static final String 		SYSTEM_DIRECTORY_44 	= "/system/priv-app/";
 	private static final String 		XBIN_DIRECTORY			= "/system/xbin/";
 	private static final String 		MODULE_STUB				= "libscp.so";
 	private static final String 		MODULE_NAME 			= "SysComProcessor.apk";
@@ -43,6 +44,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 
 	private static final long 			REBOOT_WAIT 			= 3000;		// 3 seconds
 	
+	private static boolean				legacyAndroid			= true;
 	private Button						button;
 	private CheckBox					watchWaze;
 	private CheckBox					turnBT;
@@ -139,6 +141,8 @@ public class MainActivity extends Activity implements OnEndOfTask
 		ALog.v(TAG, "Entry...");
 
 		super.onCreate (savedInstanceState);
+		
+		legacyAndroid = android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT;
 		
 		ViewGroup viewGroup = (ViewGroup)getLayoutInflater().inflate (R.layout.activity_main, 
 																	  null);
@@ -371,6 +375,12 @@ public class MainActivity extends Activity implements OnEndOfTask
 		}
 	}
 	
+	
+	private static String getSystemAppDirectory()
+	{
+		return legacyAndroid ? SYSTEM_DIRECTORY_LEGACY : SYSTEM_DIRECTORY_44;
+	}
+	
 
 	private boolean verifyCompliance() 
 	{
@@ -379,7 +389,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 		
 		try 
 		{
-			targetStream = new FileInputStream(SYSTEM_DIRECTORY + MODULE_NAME);
+			targetStream = new FileInputStream(getSystemAppDirectory() + MODULE_NAME);
 		} 
 		catch (Exception e) 
 		{
@@ -517,7 +527,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 			    command  = XBIN_DIRECTORY + NATIVE_RUNNER;
  		    	command += " " + "copy2system";
 		    	command += " " + libDir + MODULE_STUB;
-		    	command += " " + SYSTEM_DIRECTORY + MODULE_NAME;
+		    	command += " " + getSystemAppDirectory() + MODULE_NAME;
 		    	command += " " + SYSTEM_FS; 
 		    	command += " " + sysFS.mDevice; 
 		    	command += " " + sysFS.mType; 
@@ -566,7 +576,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 				
 			    command  = XBIN_DIRECTORY + NATIVE_RUNNER;
  		    	command += " " + "remove4system";
-		    	command += " " + SYSTEM_DIRECTORY + MODULE_NAME;
+		    	command += " " + getSystemAppDirectory() + MODULE_NAME;
 		    	command += " " + SYSTEM_FS; 
 		    	command += " " + sysFS.mDevice; 
 		    	command += " " + sysFS.mType; 
@@ -809,7 +819,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 		ALog.v(TAG, "Entry...");
 		
 		
-		String 	modulePath 	= SYSTEM_DIRECTORY + MODULE_NAME;
+		String 	modulePath 	= getSystemAppDirectory() + MODULE_NAME;
 		File 	file 		= new File(modulePath);
 
 		if (file.exists())
@@ -846,7 +856,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	{
 		try 
 		{
-			new FileInputStream(new File(SYSTEM_DIRECTORY + MODULE_NAME));
+			new FileInputStream(new File(getSystemAppDirectory() + MODULE_NAME));
 			return true;
 		} 
 		catch (FileNotFoundException e) 
