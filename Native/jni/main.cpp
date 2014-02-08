@@ -76,22 +76,34 @@ int main (int 		argc,
 {
     LOGV("main. Entry...");
 
-    if (setuid (0)
-    	||
-    	setgid (0))
+    if (0 == setresuid (0, 0, 0)
+    	&&
+    	0 == setresgid (0, 0, 0))
     {
-    	printf ("main. 'root' refused! errno: %d/%X\n",
+    	printf ("main. New type 'root' acquired!\n");
+        LOGW("main. New type 'root' acquired!");
+    }
+    else if (0 == setuid (0)
+        	 &&
+        	 0 == setgid (0)
+        	 &&
+        	 0 == seteuid (0)
+        	 &&
+        	 0 == setegid (0))
+    {
+    	printf ("main. Old type 'root' acquired!\n");
+        LOGW("main. Old type 'root' acquired!");
+    }
+    else
+    {
+       	printf ("main. 'root' refused! errno: %d/%X\n",
     			errno,
     			errno);
         LOGE("main. 'root' refused! errno: %d/%X\n",
     		 errno,
     		 errno);
     }
-    else
-    {
-    	printf ("main. 'root' acquired!\n");
-        LOGW("main. 'root' acquired!");
-    }
+
 
     LOGV("main. Number of parameters beyond the own path is %d",
     	 argc - 1);
@@ -178,10 +190,15 @@ int copy2system (int 		argc,
 	if (ret)
 	{
 		retall = 1 << 0;
+
+		LOGD("copy2system. 'mount' for r/w returned %d with errno = %d",
+			 ret, errno);
+	}
+	else
+	{
+		LOGD("copy2system. 'mount' for r/w returned 0");
 	}
 
-	LOGD("copy2system. 'mount' for r/w returned %d",
-	     ret);
 
 
 // 2. Copy the stub file
