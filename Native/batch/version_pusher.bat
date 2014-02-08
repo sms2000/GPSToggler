@@ -1,4 +1,5 @@
 @echo off
-@echo Verison pusher invoked.
+@echo Version pusher invoked.
 VersionPusherGUI.exe ..\assets\version.xml
-@echo Verison pusher finished.
+rem VersionPusherGUI.exe ..\..\GPSToggler\AndroidManifest.xml
+@echo Version pusher finished.
