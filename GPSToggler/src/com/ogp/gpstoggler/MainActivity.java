@@ -138,7 +138,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	@Override
 	protected void onCreate (Bundle savedInstanceState) 
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "onCreate. Entry...");
 
 		super.onCreate (savedInstanceState);
 		
@@ -164,7 +164,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 		turnBT.	  		setChecked (StateMachine.getTurnBT());
 		useNotification.setChecked (StateMachine.getUseNotification());
 		
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "onCreate. Exit.");
 	}
 
 
@@ -184,7 +184,7 @@ public class MainActivity extends Activity implements OnEndOfTask
             public void onReceive (Context 	context, 
             					   Intent 	intent) 
             {
-            	ALog.v(TAG, "Entry...");
+            	ALog.v(TAG, "onResume. Entry...");
             	
                 String 		payload = intent.getStringExtra (MainService.GPS_PAYLOAD);
                 if (payload.equals (MainService.GPS_REFRESH))
@@ -192,12 +192,12 @@ public class MainActivity extends Activity implements OnEndOfTask
                 	boolean status  = intent.getIntExtra (MainService.GPS_STATUS, 
                 										  0) == 1;
 
-                	ALog.w(TAG, "Called 'RefreshGRPStatus'.");
+                	ALog.w(TAG, "onResume. Called 'RefreshGRPStatus'.");
                 	handler.post (new RefreshGRPStatus(status));
                 }
 
                 
-                ALog.v(TAG, "Exit.");
+                ALog.v(TAG, "onResume. Exit.");
             }
         };
 
@@ -247,16 +247,16 @@ public class MainActivity extends Activity implements OnEndOfTask
 		    				 serviceConnection, 
 							 Context.BIND_AUTO_CREATE))
 			{
-				ALog.d(TAG, "bindService succeeded.");
+				ALog.d(TAG, "bindToService. bindService succeeded.");
 			}
 			else
 			{
-				ALog.e(TAG, "bindService failed.");
+				ALog.e(TAG, "bindToService. bindService failed.");
 			}	
 		}
 		else
 		{
-			ALog.e(TAG, "Repeated call.");
+			ALog.e(TAG, "bindToService. Repeated call.");
 		}
 	}
 
@@ -268,11 +268,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 			unbindService (serviceConnection);
 			serviceConnection = null;
 
-			ALog.d(TAG, "unbindService finished.");
+			ALog.d(TAG, "unbindFromService. unbindService finished.");
 		}
 		else
 		{
-			ALog.e(TAG, "unbindService not called.");
+			ALog.e(TAG, "unbindFromService. unbindService not called.");
 		}
 	}
 
@@ -289,7 +289,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	{
 		currentGPSStatus = status;
 	
-		ALog.d(TAG, "GPS now " + (currentGPSStatus ? "on" : "off"));
+		ALog.d(TAG, "requestCurrentGPSState. GPS now " + (currentGPSStatus ? "on" : "off"));
 
 			
 		String strStatus = getResources().getString (R.string.gps_status);
@@ -301,71 +301,92 @@ public class MainActivity extends Activity implements OnEndOfTask
 	
 	public void clickButton (View view)
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "clickButton. Entry...");
 		
 		if (currentGPSStatus)
 		{
-			ALog.w(TAG, "Pressed when ON");
+			ALog.w(TAG, "clickButton. Pressed when ON");
 		}
 		else
 		{
-			ALog.w(TAG, "Pressed when OFF");
+			ALog.w(TAG, "clickButton. Pressed when OFF");
 		}
 
 		MainService.swapGPSStatus (getApplicationContext());
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "clickButton. Exit.");
 	}
 	
 	
+	public void clickCopyBinaries (View view)
+	{
+		ALog.v(TAG, "clickCopyBinaries. Entry...");
+		
+	    new MoverThread().start();
+	    
+		ALog.v(TAG, "clickCopyBinaries. Exit.");
+	}
+
+	
 	public void clickNotification (View view)
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "clickNotification. Entry...");
 
 		StateMachine.setUseNotification (((CheckBox)view).isChecked());
 		StateMachine.writeToPersistantStorage();
 
 		MainService.setServiceForeground();
 		
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "clickNotification. Exit.");
 	}
 	
 	
 	public void clickWatchWaze (View view)
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "clickWatchWaze. Entry...");
 
 		StateMachine.setWatchGPSSoftware (((CheckBox)view).isChecked());
 		StateMachine.writeToPersistantStorage();
 		
 		MainService.updateWidgets (getApplicationContext());
 		
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "clickWatchWaze. Exit.");
 	}
 
 	
 	public void clickTurnBT (View view)
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "clickTurnBT. Entry...");
 
 		StateMachine.setTurnBT (((CheckBox)view).isChecked());
 		StateMachine.writeToPersistantStorage();
 
 		MainService.updateBTAsGPS();
 		
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "clickTurnBT. Exit.");
 	}
 	
 		
 	public void clickUninstall (View view)
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "clickUninstall. Entry...");
 
 		new UninstallThread().start();
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "clickUninstall. Exit.");
 	}
 
+
+	public void clickDebugging (View view)
+	{
+		ALog.v(TAG, "clickDebugging. Entry...");
+
+		StateMachine.setUseDebugging (((CheckBox)view).isChecked());
+		StateMachine.writeToPersistantStorage();
+
+		ALog.v(TAG, "clickDebugging. Exit.");
+	}
+	
 	
 	private void inviteSystemize() 
 	{
@@ -912,6 +933,8 @@ public class MainActivity extends Activity implements OnEndOfTask
 
 	private void flushCommand (String command)
 	{
+		ALog.v(TAG,  "flushCommand. Entry...");
+
 		try
 		{
 	    	Process chperm = Runtime.getRuntime().exec ("su");	// The only one place we actually need SU
@@ -919,13 +942,18 @@ public class MainActivity extends Activity implements OnEndOfTask
 			
 			os.writeBytes (command);
 		    os.flush();
+		    
 		    os.writeBytes ("exit\n");
 		    os.flush();
 
 		    chperm.waitFor();  				
+
+		    ALog.v(TAG,  "flushCommand. Exit.");
 		}
 		catch(Exception e)
 		{
+			ALog.e(TAG,  "flushCommand. EXC(1)");
 		}
 	}
+
 }

@@ -1,6 +1,7 @@
 package com.ogp.gpstoggler;
 
 import android.os.Handler;
+import android.widget.Toast;
 import android.app.Activity;
 import android.app.ActivityManager;
 
@@ -42,11 +43,13 @@ public class WatchdogThread extends Thread
 	private class StatusChange implements Runnable
 	{
 		private boolean enableGPS;
+		private String  application;
 		
 		
-		private StatusChange(boolean enableGPS)
+		private StatusChange(boolean enableGPS, String application)
 		{
-			this.enableGPS = enableGPS;
+			this.enableGPS   = enableGPS;
+			this.application = application;
 		}
 
 		
@@ -56,11 +59,22 @@ public class WatchdogThread extends Thread
 			try
 			{
 				mainService.reportGPSSoftwareStatus (enableGPS);
-				ALog.v(TAG, "reportGPSSoftwareStatus succeeded for " + enableGPS);
+				ALog.v(TAG, "StatusChange::run. reportGPSSoftwareStatus succeeded for " + enableGPS);
+				
+				
+				String text = mainService.getResources().getString (enableGPS ? R.string.gps_app_on : R.string.gps_app_off);
+
+				if (enableGPS)
+				{
+					text = String.format(text, 
+							             application);
+				}
+				
+				Toast.makeText (mainService.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 			}
 			catch(Exception e)
 			{
-				ALog.e(TAG, "EXC(1)");
+				ALog.e(TAG, "StatusChange::run. EXC(1)");
 			}
 		}
 	}
@@ -68,7 +82,7 @@ public class WatchdogThread extends Thread
 	
 	public WatchdogThread(MainService		mainService)
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "WatchdogThread. Entry...");
 		
 		this.mainService		= mainService;
 		this.runThread			= true;
@@ -78,13 +92,13 @@ public class WatchdogThread extends Thread
 		
 		start();
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "WatchdogThread. Exit.");
 	}
 	
 	
 	public void finish()
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "finish. Entry...");
 
 		try 
 		{
@@ -95,16 +109,16 @@ public class WatchdogThread extends Thread
 		} 
 		catch (InterruptedException e) 
 		{
-			ALog.e(TAG, "EXC(1)");
+			ALog.e(TAG, "finish. EXC(1)");
 		}
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "finish. Exit.");
 	}
 	
 	@Override
 	public void run()
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "run. Entry...");
 
 		while (runThread)
 		{
@@ -112,9 +126,20 @@ public class WatchdogThread extends Thread
 				&& 
 				System.currentTimeMillis() - startTime > LAZY_START)
 			{
+				if (StateMachine.getUseDebugging())
+				{
+					ALog.v(TAG,  "run. Checking: ... ?");
+				}
+				
 				verifyGPSSoftwareRunning();
 			}
-			
+			else
+			{
+				if (StateMachine.getUseDebugging())
+				{
+					ALog.v(TAG,  "run. Skipping check...");
+				}
+			}
 			
 			try 
 			{
@@ -125,7 +150,7 @@ public class WatchdogThread extends Thread
 			}
 		}
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "run. Exit.");
 	}
 
 
@@ -147,7 +172,7 @@ public class WatchdogThread extends Thread
 						if (iterator.processName.contains (iterator2)) 
 						{
 							found = iterator2;
-							ALog.i(TAG, "GPS status active due to foreground process: " + found);
+							ALog.w(TAG, "verifyGPSSoftwareRunning. GPS status active due to foreground process: " + found);
 							break;
 						}
 					}
@@ -165,9 +190,10 @@ public class WatchdogThread extends Thread
 		if (statusNow != statusSaved)
 		{
 			statusSaved = statusNow;
-			ALog.i(TAG, "GPS software status changed. Now it's " + (statusSaved ? "running." : "stopped."));
+			ALog.w(TAG, "verifyGPSSoftwareRunning. GPS software status changed. Now it's " + (statusSaved ? "running." : "stopped."));
 
-			handler.post(new StatusChange (statusSaved));
+			handler.post(new StatusChange (statusSaved, 
+										   found));
 		}
 	}
 }

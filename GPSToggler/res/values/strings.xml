@@ -36,6 +36,9 @@
 	<string name="gps_on">[ON]</string>
 	<string name="gps_off">[OFF]</string>
 			
+	<string name="gps_app_on">Watchdog enabled GPS for [%s]</string>
+	<string name="gps_app_off">GPS disabled by watchdog</string>
+	
 	<string name="root">This application requires \'root\'.</string>
 	<string name="busybox">This application requires \'BusyBox\'. Do you want to install?</string>
 	<string name="install_module">This application need to install a module into the system area.\nInstall?</string>
@@ -52,6 +55,11 @@
     <string name="notification_text">Add notification icon and bring the service to the foreground.</string>
     <string name="use_notification">Notification active</string>
     
+	<string name="debugging_text">\tProvide extensive debugging\n\t(more CPU required).</string>
+    
+    <string name="use_debugging">Extensive debugging</string>
+    
     <string name="wait_reboot">Rebooting...</string>
     		
+    <string name="copy_binaries">Copy binaries [Debug]</string>
 </resources>

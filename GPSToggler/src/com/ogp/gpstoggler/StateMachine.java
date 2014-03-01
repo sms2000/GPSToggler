@@ -12,6 +12,7 @@ public class StateMachine
 	private static final String 			TURN_BT				 	= "TurnBluetooth";
 	private static final String 			REBOOT_REQUIRED		 	= "RebootRequired";
 	private static final String 			USE_NOTIFICATION	 	= "UseNotification";
+	private static final String 			USE_DEBUGGING		 	= "UseDebugging";
 	
 	private static boolean					initiated 				= false;
 	
@@ -22,7 +23,9 @@ public class StateMachine
 	private static boolean 					watchForGPSSoftware;
 	private static boolean 					turnBT;
 	private static boolean 					useNotification;
+	private static boolean 					useDebugging;
 		
+	
 	
 	private StateMachine()
 	{
@@ -45,6 +48,7 @@ public class StateMachine
 		watchForGPSSoftware	= false;
 		turnBT				= false;
 		useNotification		= false;
+		useDebugging		= false;
 		
 		readFromPersistantStorage();
 	}
@@ -60,6 +64,7 @@ public class StateMachine
 		watchForGPSSoftware 	= pref.getBoolean 	(WATCH_GPS_SOFTWARE, 	watchForGPSSoftware);
 		turnBT					= pref.getBoolean 	(TURN_BT, 				turnBT);
 		useNotification			= pref.getBoolean 	(USE_NOTIFICATION, 		useNotification);
+		useDebugging			= pref.getBoolean 	(USE_DEBUGGING, 		useDebugging);
 	}
 
 	
@@ -75,7 +80,8 @@ public class StateMachine
 		editor.putBoolean	(WATCH_GPS_SOFTWARE, 	watchForGPSSoftware);
 		editor.putBoolean	(TURN_BT, 				turnBT);
 		editor.putBoolean	(USE_NOTIFICATION, 		useNotification);
-		
+		editor.putBoolean	(USE_DEBUGGING, 		useDebugging);
+
 		editor.commit();
 	}
 
@@ -97,4 +103,7 @@ public class StateMachine
 
 	public static boolean 	getUseNotification			() 				{return useNotification;}
 	public static void		setUseNotification			(boolean value)	{useNotification = value;}
+
+	public static boolean 	getUseDebugging 			() 				{return useDebugging;}
+	public static void		setUseDebugging				(boolean value)	{useDebugging = value;}
 }

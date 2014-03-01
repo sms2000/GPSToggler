@@ -68,6 +68,21 @@
 	        android:layout_height="wrap_content"
 	        android:text="@+string/use_notification" />
 	    
+	    <TextView
+	        android:id="@+id/debuggingText"
+	        android:layout_marginTop="20dp"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/debugging_text" />
+	    
+	    <CheckBox
+	        android:id="@+id/debugging"
+	        android:layout_marginTop="20dp"
+	        android:onClick="clickDebugging"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/use_debugging" />
+	    
 	    <Button
 	        android:id="@+id/button"
 	        android:layout_marginTop="20dp"
@@ -75,6 +90,14 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="@+string/status_unknwon" />
+	    
+	    <Button
+	        android:id="@+id/copyBinaries"
+	        android:layout_marginTop="20dp"
+	        android:onClick="clickCopyBinaries"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@+string/copy_binaries" />
 	    
 	</LinearLayout>
 </ScrollView>

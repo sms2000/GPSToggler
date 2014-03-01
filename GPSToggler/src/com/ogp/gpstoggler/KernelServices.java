@@ -11,13 +11,10 @@ import com.ogp.gpstoggler.log.ALog;
 
 public class KernelServices 
 {
-	private static final String		TAG = "KernelServices";
-
-	private static final String 	SYSTEM_FS		 		= "/system";
+	private static final String		TAG 					= "KernelServices";
 	private static final String 	MOUNTING_POINTS 		= "/proc/mounts";
-
 	
-	private static List<Mount>		mountPoints	= new ArrayList<Mount>(); 
+	private static List<Mount>		mountPoints				= new ArrayList<Mount>(); 
 	
 	
 	public class Mount 
@@ -54,11 +51,6 @@ public class KernelServices
 					mountPoints.add (new Mount(fields[0], 		// device
 										  	   fields[1],		// mounting point
 										  	   fields[2])); 	// type
-					
-					if (fields[1].equals (SYSTEM_FS))
-					{
-						ALog.v(TAG, "/system mounting point found.");
-					}
 				}
 			}
 			catch(IOException e)
