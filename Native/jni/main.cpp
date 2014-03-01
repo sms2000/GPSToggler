@@ -54,6 +54,10 @@
 // For command 'reboot'
 // No arguments
 
+// No command - call 'debugging'
+
+
+void debugging (void);
 
 int copy2system (int 	argc,
 		  	  	 char	*argv[]);
@@ -69,6 +73,11 @@ int attributes (int 	argc,
 		  	    char	*argv[]);
 
 int reboot (void);
+
+int fs_remount (char 	*device,
+				char	*fs,
+				char	*type,
+				bool	write);
 
 
 int main (int 		argc,
@@ -105,6 +114,10 @@ int main (int 		argc,
     }
 
 
+    LOGV("main. UIDs %d/%d   GIDs %d/%d",
+    	 getuid(), geteuid(), getgid(), getegid());
+
+
     LOGV("main. Number of parameters beyond the own path is %d",
     	 argc - 1);
 
@@ -120,6 +133,8 @@ int main (int 		argc,
     if (argc < 2)
     {
         LOGE("main. Number of parameters is too short. No actual command recognized.");
+        LOGE("main. As a debugging measure, the 'debugging' function is called.");
+        debugging();
     }
     else if (!strcmp (argv[1],
     				  "copy2system"))
@@ -180,12 +195,13 @@ int copy2system (int 		argc,
 		}
 	}
 
+	int ret;
+
 // 1. Mount the system FS as r/w
-    int ret = mount (argv[3],
-    				 argv[2],
-    				 argv[4],
-    				 MS_MGC_VAL | MS_REMOUNT,
-    				 "");
+	ret = fs_remount (argv[3],
+					  argv[2],
+					  argv[4],
+					  true);
 
 	if (ret)
 	{
@@ -322,7 +338,7 @@ int copy2system (int 		argc,
 
 
        	ret = chmod (argv[1],
-    					 flags);
+    				 flags);
 
     	if (0 == ret)
 	    {
@@ -341,11 +357,10 @@ int copy2system (int 		argc,
 
 
 // 4. Mount the system FS as r/o
-    ret = mount (argv[3],
-    			 argv[2],
-    			 argv[4],
-    			 MS_MGC_VAL | MS_REMOUNT | MS_RDONLY,
-    			 "");
+    ret = fs_remount (argv[3],
+    			 	  argv[2],
+    			 	  argv[4],
+    			 	  false);
 
 	if (ret)
 	{
@@ -385,11 +400,10 @@ int remove4system (int 		argc,
 
 
 // 1. Mount the system FS as r/w
-    int ret = mount (argv[2],
-    				 argv[1],
-    				 argv[3],
-    				 MS_MGC_VAL | MS_REMOUNT,
-    				 "");
+    int ret = fs_remount (argv[2],
+    				 	  argv[1],
+    				 	  argv[3],
+    				 	  true);
     if (ret)
     {
     	retall |= 1 << 0;
@@ -428,11 +442,10 @@ int remove4system (int 		argc,
 // 4. Mount the system FS as r/o
     sleep (1000);
 
-    ret = mount (argv[2],
-    			 argv[1],
-    			 argv[3],
-    			 MS_MGC_VAL | MS_REMOUNT | MS_RDONLY,
-    			 "");
+    ret = fs_remount (argv[2],
+    			 	  argv[1],
+    			 	  argv[3],
+    			 	  false);
     if (ret)
     {
     	retall |= 1 << 3;
@@ -686,4 +699,75 @@ int reboot (void)
 
     LOGV("reboot. Exit.");
     return 0;
+}
+
+
+void debugging (void)
+{
+// 1. Mount the system FS as r/w
+	int ret = mount ("/dev/block/mmcblk0p13",
+					 "/system",
+					 "ext4",
+					 MS_MGC_VAL | MS_REMOUNT,
+					 "");
+	if (ret)
+	{
+		LOGD("debugging. 'mount' for r/w returned %d with errno = %d",
+			 ret, errno);
+	}
+	else
+	{
+		LOGD("debugging. 'mount' for r/w returned 0");
+	}
+}
+
+
+int fs_remount (char 	*device,
+				char	*fs,
+				char	*type,
+				bool	write)
+{
+// 1st attempt - API
+	int ret = mount (device,
+				 	 fs,
+				 	 type,
+				 	 MS_MGC_VAL | MS_REMOUNT | (write ? 0 : MS_RDONLY),
+				 	 "");
+
+	if (ret != 0 && errno == EACCES)
+	{
+// 2nd attempt - 'mount'
+		char	cmd[512];
+		sprintf (cmd, "mount -ro %s,remount -t %s %s",
+				 write ? "rw" : "ro",
+				 type,
+				 fs);
+
+		LOGD("fs_remount. Attempting remount in 'mount'.");
+
+		system (cmd);
+
+		usleep (200 * 1000);
+
+		ret = mount (device,
+				 	 fs,
+				 	 type,
+				 	 MS_MGC_VAL | MS_REMOUNT | (write ? 0 : MS_RDONLY),
+				 	 "");
+		if (ret == 0)
+		{
+			LOGD("fs_remount. Remount in 'mount' succeeded.");
+		}
+		else
+		{
+			LOGE("fs_remount. Remount failed with errno = %d.",
+				 errno);
+		}
+	}
+	else
+	{
+		LOGD("fs_remount. Remount in API succeeded.");
+	}
+
+	return ret;
 }
