@@ -62,4 +62,6 @@
     <string name="wait_reboot">Rebooting...</string>
     		
     <string name="copy_binaries">Copy binaries [Debug]</string>
+
+    <string name="split_aware">SplitView aware</string>
 </resources>

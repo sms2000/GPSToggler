@@ -160,10 +160,13 @@ public class WatchdogThread extends Thread
 		boolean										statusNow	= false;
 		String										found		= null;
 		
+		int											importance = StateMachine.getSplitAware() ? 
+															ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE : ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND; 
+		
 		
 		for (ActivityManager.RunningAppProcessInfo iterator : list)
 		{
-			if (ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND >= iterator.importance)
+			if (importance >= iterator.importance)
 			{
 				synchronized(listOfApps)
 				{

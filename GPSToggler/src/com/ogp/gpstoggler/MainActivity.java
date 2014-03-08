@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	private CheckBox					watchWaze;
 	private CheckBox					turnBT;
 	private CheckBox					useNotification;
+	private CheckBox					splitAware;
 	private ServiceConnection 			serviceConnection;
 	private Handler						handler					= new Handler();
 	private BroadcastReceiver 			broadcastReceiver;
@@ -152,6 +153,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 		watchWaze		= (CheckBox)viewGroup.findViewById (R.id.waze);
 		turnBT			= (CheckBox)viewGroup.findViewById (R.id.bt);
 		useNotification	= (CheckBox)viewGroup.findViewById (R.id.notification);
+		splitAware		= (CheckBox)viewGroup.findViewById (R.id.splitAware);
 				
 		StateMachine.init (this);
 		VersionXMLParser.printVersion (this);
@@ -163,6 +165,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 		watchWaze.		setChecked (StateMachine.getWatchGPSSoftware());
 		turnBT.	  		setChecked (StateMachine.getTurnBT());
 		useNotification.setChecked (StateMachine.getUseNotification());
+		splitAware.		setChecked (StateMachine.getSplitAware());
 		
 		ALog.v(TAG, "onCreate. Exit.");
 	}
@@ -340,6 +343,17 @@ public class MainActivity extends Activity implements OnEndOfTask
 		ALog.v(TAG, "clickNotification. Exit.");
 	}
 	
+	
+	public void clickSplitAware (View view)
+	{
+		ALog.v(TAG, "clickSplitAware. Entry...");
+
+		StateMachine.setSplitAware (((CheckBox)view).isChecked());
+		StateMachine.writeToPersistantStorage();
+
+		ALog.v(TAG, "clickSplitAware. Exit.");
+	}
+
 	
 	public void clickWatchWaze (View view)
 	{

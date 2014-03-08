@@ -13,6 +13,7 @@ public class StateMachine
 	private static final String 			REBOOT_REQUIRED		 	= "RebootRequired";
 	private static final String 			USE_NOTIFICATION	 	= "UseNotification";
 	private static final String 			USE_DEBUGGING		 	= "UseDebugging";
+	private static final String 			SPLIT_AWARE		 		= "SplitAware";
 	
 	private static boolean					initiated 				= false;
 	
@@ -24,6 +25,7 @@ public class StateMachine
 	private static boolean 					turnBT;
 	private static boolean 					useNotification;
 	private static boolean 					useDebugging;
+	private static boolean 					splitAware;
 		
 	
 	
@@ -49,6 +51,7 @@ public class StateMachine
 		turnBT				= false;
 		useNotification		= false;
 		useDebugging		= false;
+		splitAware			= false;
 		
 		readFromPersistantStorage();
 	}
@@ -65,6 +68,7 @@ public class StateMachine
 		turnBT					= pref.getBoolean 	(TURN_BT, 				turnBT);
 		useNotification			= pref.getBoolean 	(USE_NOTIFICATION, 		useNotification);
 		useDebugging			= pref.getBoolean 	(USE_DEBUGGING, 		useDebugging);
+		splitAware				= pref.getBoolean 	(SPLIT_AWARE, 			splitAware);
 	}
 
 	
@@ -81,6 +85,7 @@ public class StateMachine
 		editor.putBoolean	(TURN_BT, 				turnBT);
 		editor.putBoolean	(USE_NOTIFICATION, 		useNotification);
 		editor.putBoolean	(USE_DEBUGGING, 		useDebugging);
+		editor.putBoolean	(SPLIT_AWARE,			splitAware);
 
 		editor.commit();
 	}
@@ -106,4 +111,7 @@ public class StateMachine
 
 	public static boolean 	getUseDebugging 			() 				{return useDebugging;}
 	public static void		setUseDebugging				(boolean value)	{useDebugging = value;}
+
+	public static boolean 	getSplitAware 				() 				{return splitAware;}
+	public static void		setSplitAware				(boolean value)	{splitAware = value;}
 }

@@ -375,6 +375,8 @@ public class MainService extends Service
 
 		try
 		{
+			thisService.messageHandler.removeCallbacksAndMessages (null);
+			
 			thisService.messageHandler.postDelayed (thisService.new ScreenStatusChanged (status), 
 													status ? 0 : SCREEN_OFF_DELAY);
 
@@ -382,7 +384,7 @@ public class MainService extends Service
 		}
 		catch(Exception e)
 		{
-			ALog.e(TAG, "EXCE(1)");
+			ALog.e(TAG, "EXC(1)");
 		}
 		
 		ALog.v(TAG, "Exit.");
