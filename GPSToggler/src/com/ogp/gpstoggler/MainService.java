@@ -305,13 +305,21 @@ public class MainService extends Service
 	
 	public static void startServiceManually (Context 	context) 
 	{
-		if (null == thisService)
+		ALog.v(TAG, "Entry...");
+
+		try
+		{
+			thisService.toString();
+		}
+		catch(Exception e)
 		{
 			Intent serviceIntent = new Intent(context.getApplicationContext(), 
-					  						  MainService.class);
-	
+					  MainService.class);
+
 			context.startService (serviceIntent);
 		}
+		
+		ALog.v(TAG, "Exit.");
 	}
 
 	

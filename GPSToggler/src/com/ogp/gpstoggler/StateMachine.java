@@ -1,8 +1,12 @@
 package com.ogp.gpstoggler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+//import android.os.AsyncTask;
 
 
 public class StateMachine 
@@ -14,6 +18,8 @@ public class StateMachine
 	private static final String 			USE_NOTIFICATION	 	= "UseNotification";
 	private static final String 			USE_DEBUGGING		 	= "UseDebugging";
 	private static final String 			SPLIT_AWARE		 		= "SplitAware";
+
+	//private static final Long 				OK 						= 0L;
 	
 	private static boolean					initiated 				= false;
 	
@@ -27,6 +33,31 @@ public class StateMachine
 	private static boolean 					useDebugging;
 	private static boolean 					splitAware;
 		
+	private static List<AppItem>			listOfGPSAwareApplications	= null;
+	private static Boolean					listUpdated		            = false;						
+	
+	
+	/*
+    private class ReadState extends AsyncTask<String, Long, Long> 
+    {
+		@Override
+		protected Long doInBackground (String... arg) 
+		{
+			return OK;
+		}
+		
+
+		@Override
+		protected void onProgressUpdate (Long... progress) 
+		{
+	    }
+
+		@Override
+		protected void onPostExecute (Long result) 
+		{
+		}
+    }
+	*/
 	
 	
 	private StateMachine()
@@ -54,6 +85,7 @@ public class StateMachine
 		splitAware			= false;
 		
 		readFromPersistantStorage();
+		loadGPSAwareApplications (false);
 	}
 	
 	
@@ -91,6 +123,41 @@ public class StateMachine
 	}
 
 	
+	public static void loadGPSAwareApplications (boolean forceReload)
+	{
+		List<AppItem> localListOfGPSAwareApplications = ProcessManager.listGPSAwarePackages (appContext, 
+																							 forceReload);
+
+		ProcessManager.loadMarkedPackages (appContext.getSharedPreferences (PERSISTANT_STORAGE, 
+				   						   									Context.MODE_PRIVATE), 
+				   						   localListOfGPSAwareApplications);
+		
+		listOfGPSAwareApplications = localListOfGPSAwareApplications;
+	}
+	
+	
+	public static List<AppItem> getGPSAwareApplicationsList()
+	{
+		return listOfGPSAwareApplications;
+	}
+	
+	
+	public static void saveGPSAwareApplicationsList (List<AppItem> applications)
+	{
+		synchronized(listUpdated)
+		{
+			listUpdated = true;
+			
+			listOfGPSAwareApplications = applications;
+	
+			
+			ProcessManager.preserveMarkedApplications (applications, 
+													   appContext.getSharedPreferences (PERSISTANT_STORAGE, 
+															   						    Context.MODE_PRIVATE));
+		}
+	}
+
+	
 	public static boolean 	getWatchGPSSoftware			()				{return watchForGPSSoftware;}
 	public static void 		setWatchGPSSoftware			(boolean value)	{watchForGPSSoftware = value;}
 
@@ -114,4 +181,34 @@ public class StateMachine
 
 	public static boolean 	getSplitAware 				() 				{return splitAware;}
 	public static void		setSplitAware				(boolean value)	{splitAware = value;}
+
+
+	public static List<String> updateEnabledApplicationsList(List<String> oldList) 
+	{
+		List<String> apps = null;
+		
+		synchronized(listUpdated)
+		{
+			if (!listUpdated 
+				&& 
+				null != oldList)
+			{
+				return oldList;
+			}
+			
+			listUpdated = false;
+		
+			apps = new ArrayList<String>();
+	
+			for (AppItem app : listOfGPSAwareApplications)
+			{
+				if (app.getExpectsGPS())
+				{
+					apps.add (app.getPackageName());
+				}
+			}
+		}
+		
+		return apps;
+	}
 }

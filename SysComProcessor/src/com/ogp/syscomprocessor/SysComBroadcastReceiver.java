@@ -40,7 +40,9 @@ public class SysComBroadcastReceiver extends BroadcastReceiver
 		}
 		
 		
-		if (action.equals (Intent.ACTION_BOOT_COMPLETED))
+		if (action.equals (Intent.ACTION_BOOT_COMPLETED) 
+			||
+			action.equals (Intent.ACTION_USER_PRESENT))
 		{
 			SysComService.bindToService (context);
 		}

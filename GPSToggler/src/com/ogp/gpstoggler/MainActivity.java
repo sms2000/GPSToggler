@@ -206,6 +206,12 @@ public class MainActivity extends Activity implements OnEndOfTask
 
         registerReceiver (broadcastReceiver, 
         				  intentFilter);
+        
+        if (StateMachine.getRebootRequired())
+        {
+// Maybe this time user wants to reboot?
+			showRebootDialog();
+        }
 	}
 	
 	
@@ -318,6 +324,17 @@ public class MainActivity extends Activity implements OnEndOfTask
 		MainService.swapGPSStatus (getApplicationContext());
 
 		ALog.v(TAG, "clickButton. Exit.");
+	}
+	
+	
+	public void clickSelectPackets (View view)
+	{
+		ALog.v(TAG, "clickSelectPackets. Entry...");
+		
+		Intent intent = new Intent(this, SelectActivity.class);
+		startActivity (intent);
+
+		ALog.v(TAG, "clickSelectPackets. Exit.");
 	}
 	
 	
@@ -736,9 +753,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 		dialog.setPositiveButton (R.string.ok, 
 								  new DialogInterface.OnClickListener() 
 		{
-			 public void onClick (DialogInterface 	arg0, 
-					 			  int 				arg1) 
+			 public void onClick (DialogInterface 	dialog, 
+					 			  int 				id) 
 			 {
+				 dialog.cancel();
+
 				 finish();
 			 }
 		});
@@ -756,9 +775,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 		dialog.setPositiveButton (R.string.ok, 
 								  new DialogInterface.OnClickListener() 
 		{
-			 public void onClick (DialogInterface 	arg0, 
-					 			  int 				arg1) 
+			 public void onClick (DialogInterface 	dialog, 
+					 			  int 				id) 
 			 {
+				 dialog.cancel();
+				 
 				 new MoverThread().start();
 			 }
 		});
@@ -766,10 +787,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 		dialog.setNegativeButton (R.string.cancel, 
 								  new DialogInterface.OnClickListener() 
 		{
-			public void onClick (DialogInterface 	arg0, 
-								 int 				arg1) 
+			public void onClick (DialogInterface 	dialog, 
+								 int 				id) 
 			{
-				finish();
+				dialog.cancel();
+				//finish();
 			}
 		});
 
@@ -785,9 +807,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 		dialog.setPositiveButton (R.string.ok, 
 								  new DialogInterface.OnClickListener() 
 		{
-			 public void onClick (DialogInterface 	arg0, 
-					 			  int 				arg1) 
+			 public void onClick (DialogInterface 	dialog, 
+					 			  int 				id) 
 			 {
+				 dialog.cancel();
+
 				 finish();
 			 }
 		});
@@ -804,12 +828,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 		dialog.setPositiveButton (R.string.yes, 
 								  new DialogInterface.OnClickListener() 
 		{
-			public void onClick (DialogInterface 	arg0, 
-								 int 				arg1) 
+			public void onClick (DialogInterface 	dialog, 
+								 int 				id) 
 			{
-				StateMachine.setRebootRequired (false);
-				StateMachine.writeToPersistantStorage();
-
+				dialog.cancel();
+				
 				rebootAndroidWait();
 			}
 		});
@@ -817,10 +840,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 		dialog.setNegativeButton (R.string.no, 
 								  new DialogInterface.OnClickListener() 
 		{
-			public void onClick (DialogInterface 	arg0, 
-								 int 				arg1) 
+			public void onClick (DialogInterface 	dialog, 
+								 int 				id) 
 			{
-				finish();
+				dialog.cancel();
+				//finish();
 			}
 		});
 
@@ -838,9 +862,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 		dialog.setPositiveButton (R.string.ok, 
 								  new DialogInterface.OnClickListener() 
 		{
-			 public void onClick (DialogInterface 	arg0, 
-					 			  int 				arg1) 
+			 public void onClick (DialogInterface 	dialog, 
+					 			  int 				id) 
 			 {
+				 dialog.cancel();
+
 				 finish();
 			 }
 		});

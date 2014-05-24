@@ -3,7 +3,6 @@
 	<name>SysComProcessor</name>
 	<comment></comment>
 	<projects>
-		<project>Native</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

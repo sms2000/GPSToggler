@@ -11,6 +11,14 @@ It requires the 'su' privilegies only during the very first run (reboot is still
 
 Versions:
 
+0.54
+----
+
+1. You may select now which applications to look for when automatically enabling/disablonh GPS. Yet some bugs are expected.
+
+2. Minor improvements.
+
+
 0.42
 ----
 

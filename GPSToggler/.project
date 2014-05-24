@@ -3,7 +3,7 @@
 	<name>GPSToggler</name>
 	<comment></comment>
 	<projects>
-		<project>SysComProcessor</project>
+		<project>Prebuilds</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

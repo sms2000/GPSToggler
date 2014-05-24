@@ -30,13 +30,30 @@
 	        android:layout_height="wrap_content"
 	        android:text="" />
 	    
-	    <CheckBox
-	        android:id="@+id/waze"
-	        android:layout_marginTop="20dp"
-	        android:onClick="clickWatchWaze"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@+string/watch_waze" />
+	    <RelativeLayout	android:layout_width="match_parent"
+	    				android:layout_height="wrap_content"
+	    				android:layout_marginRight="10dp"
+	    				android:orientation="horizontal">
+		    <CheckBox
+		        android:id="@+id/waze"
+		        android:layout_marginTop="20dp"
+		        android:onClick="clickWatchWaze"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@+string/watch_waze" />
+	        
+		    <Button
+		        android:id="@+id/selectPackets"
+		        android:layout_marginTop="20dp"
+		        android:onClick="clickSelectPackets"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentRight="true"
+		        android:text="@+string/select_packets" />
+		    		    
+		    
+	    </RelativeLayout>
+	    
 	    
 	    <TextView
 	        android:id="@+id/btText"

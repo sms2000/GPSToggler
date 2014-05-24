@@ -5,7 +5,6 @@ import android.widget.Toast;
 import android.app.Activity;
 import android.app.ActivityManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.ogp.gpstoggler.log.ALog;
@@ -19,7 +18,7 @@ public class WatchdogThread extends Thread
 	private static final long 		WATCHDOG_ON	 					= 5000; // Polling time (ms) when on
 	private static final long 		LAZY_START 						= 5000; // Lazy start 
 	
-	private static List<String>		listOfApps						= new ArrayList<String>();
+	private static List<String>		listOfApps;
 	
 	private MainService				mainService;
 	private ActivityManager 		activityManager;
@@ -27,17 +26,6 @@ public class WatchdogThread extends Thread
 	private boolean					statusSaved 					= false;
 	private Handler					handler							= new Handler();
 	private long 					startTime;
-	
-	
-	static
-	{
-		listOfApps.add ("com.waze");
-		listOfApps.add ("com.google.android.apps.maps");
-		
-		listOfApps.add ("com.navngo.");
-		listOfApps.add ("com.nng.");
-		
-	}
 	
 	
 	private class StatusChange implements Runnable
@@ -163,21 +151,19 @@ public class WatchdogThread extends Thread
 		int											importance = StateMachine.getSplitAware() ? 
 															ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE : ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND; 
 		
+		listOfApps = StateMachine.updateEnabledApplicationsList(listOfApps);
 		
 		for (ActivityManager.RunningAppProcessInfo iterator : list)
 		{
 			if (importance >= iterator.importance)
 			{
-				synchronized(listOfApps)
+				for (String iterator2 : listOfApps)
 				{
-					for (String iterator2 : listOfApps)
+					if (iterator.processName.equals (iterator2)) 
 					{
-						if (iterator.processName.contains (iterator2)) 
-						{
-							found = iterator2;
-							ALog.w(TAG, "verifyGPSSoftwareRunning. GPS status active due to foreground process: " + found);
-							break;
-						}
+						found = iterator2;
+						ALog.w(TAG, "verifyGPSSoftwareRunning. GPS status active due to foreground process: " + found);
+						break;
 					}
 				}
 			}

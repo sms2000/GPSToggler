@@ -24,16 +24,21 @@ public class ActivityManagement extends BroadcastReceiver
 			return;
 		}
 		
-		if (action.equals (Intent.ACTION_BOOT_COMPLETED))
+		if (action.equals (Intent.ACTION_BOOT_COMPLETED) 
+			||
+			action.equals (Intent.ACTION_USER_PRESENT))
 		{
-			StateMachine.init (context);
-
-			if (StateMachine.getRebootRequired())
+			if (action.equals (Intent.ACTION_BOOT_COMPLETED))
 			{
-				StateMachine.setRebootRequired (false);
-				StateMachine.writeToPersistantStorage();
+				StateMachine.init (context);
+
+				if (StateMachine.getRebootRequired())
+				{
+					StateMachine.setRebootRequired (false);
+					StateMachine.writeToPersistantStorage();
+				}
 			}
-			
+						
 			
 			MainService.startServiceManually (context);
 		}

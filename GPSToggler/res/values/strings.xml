@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description">\tGPSToggler is a widget based program. It can turn on and off GPS even for those ROMs and kernels other widgets fail.\n\n\tThis widget requires the root access.\n\n\tSingle click on the widget toggles the GPS. Double click - launches this panel.\n\n\tThe widget may enable/disable GPS when Waze, iGO or Google Maps (de)activated (experimental).</string>
+    <string name="description">\tGPSToggler is a widget based program. It can turn on and off GPS even for those ROMs and kernels other widgets fail.\n\n\tThis widget requires the root access.\n\n\tSingle click on the widget toggles the GPS. Double click - launches this panel.\n\n\tThe widget may enable/disable GPS when selected applications (de)activated.</string>
     
-    <string name="watch_waze">Watch for Waze/iGo/Google Maps</string>
+    <string name="watch_waze">Watch for selected applications</string>
     
     <string name="app_name">GPSToggler</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
 	<string name="widget_name">GPS on/off widget</string>
 	<string name="bt_text">\tThe application may also turn on/off your Bluetooth device</string>
@@ -64,4 +63,10 @@
     <string name="copy_binaries">Copy binaries [Debug]</string>
 
     <string name="split_aware">SplitView aware</string>
-</resources>
+
+    <string name="select_packets">Select...</string>
+    <string name="selectDescription">Mark the applications you may want to have GPS enabled:</string>
+    <string name="selectDescriptionNo">No GPS aware applications found.</string>
+    <string name="itemKey">itemKey.</string>
+    
+    </resources>

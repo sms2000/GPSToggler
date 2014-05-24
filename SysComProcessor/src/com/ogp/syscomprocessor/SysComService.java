@@ -39,9 +39,9 @@ public class SysComService extends Service
 		@Override
 		public void bindCallback() throws RemoteException 
 		{
-			ALog.v(TAG, "Entry...");
+			ALog.v(TAG, "SysComServiceInterface.Stub::bindCallback. Entry...");
 
-			ALog.v(TAG, "Exit.");
+			ALog.v(TAG, "SysComServiceInterface.Stub::bindCallback. Exit.");
 		}
 	};
 
@@ -52,13 +52,13 @@ public class SysComService extends Service
 		public void onReceive (Context 	context, 
 							   Intent 	intent) 
 		{
-			ALog.v(TAG, "Entry...");
+			ALog.v(TAG, "BroadcastReceiver::onReceive. Entry...");
 
 			String action = intent.getAction();
 			
 			if (null == action)
 			{
-				ALog.w (TAG, "Unknown action received."); 
+				ALog.w (TAG, "BroadcastReceiver::onReceive. Unknown action received."); 
 				
 				action = "";
 			}
@@ -67,7 +67,7 @@ public class SysComService extends Service
 /*				||
 				action.equals (Intent.ACTION_PACKAGE_FULLY_REMOVED)*/)
 			{
-				ALog.d(TAG, "Action: " + intent.getAction());
+				ALog.d(TAG, "BroadcastReceiver::onReceive. Action: " + intent.getAction());
 				
 				String 	packageName = "?";
 				
@@ -79,11 +79,11 @@ public class SysComService extends Service
 				{
 				}
 
-				ALog.d(TAG, "Package: " + packageName);
+				ALog.d(TAG, "BroadcastReceiver::onReceive. Package: " + packageName);
 				
 				if (packageName.equals (GUI_PACKAGE))
 				{
-					ALog.w(TAG,  "Attempting to uninstall the system module.");
+					ALog.w(TAG,  "BroadcastReceiver::onReceive. Attempting to uninstall the system module.");
 					
 					unbindFromService (thisService);
 					removeSelf (thisService);
@@ -91,9 +91,8 @@ public class SysComService extends Service
 			}
 			
 			
-			ALog.d(TAG,  "Processed action: " + action);
-
-			ALog.v(TAG, "Exit.");
+			ALog.d(TAG, "BroadcastReceiver::onReceive. Processed action: " + action);
+			ALog.v(TAG, "BroadcastReceiver::onReceive. Exit.");
 		}
 	};
 
@@ -102,7 +101,7 @@ public class SysComService extends Service
 	{
 		super();
 
-		ALog.v(TAG, "Constructor called.");
+		ALog.v(TAG, "SysComService. Constructor called.");
 	}
 	
 	
@@ -117,13 +116,13 @@ public class SysComService extends Service
 	@Override
 	public void onCreate()
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "onCreate. Entry...");
 
 		thisService = this;
 		
 		super.onCreate();
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "onCreate. Exit.");
 	}
 
 	
@@ -132,11 +131,11 @@ public class SysComService extends Service
 							   int 		flags, 
 							   int 		startId)
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "onStartCommand. Entry...");
 
 		startReceivers (thisService);
 		
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "onStartCommand. Exit.");
 		
 		return START_STICKY;
 	}
@@ -145,40 +144,42 @@ public class SysComService extends Service
 	@Override
 	public void onDestroy()
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "onDestroy. Entry...");
 
 		super.onDestroy();
 
 		stopReceivers (thisService);
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "onDestroy. Exit.");
 	}
 	
 	
 	public static void bindToService (Context context) 
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "bindToService. Entry...");
 		
 		
-		if (null == serviceConnection)
+		try
+		{
+			serviceConnection.toString();
+			ALog.e(TAG, "Repeated call.");
+		}
+		catch(Exception e)
 		{
 			Intent serviceIntent = new Intent(context.getApplicationContext(), 
 					  						  SysComService.class);
-	
+
 			context.startService (serviceIntent);
 		}
-		else
-		{
-			ALog.e(TAG, "Repeated call.");
-		}
-
-		ALog.v(TAG, "Exit.");
+		
+		
+		ALog.v(TAG, "bindToService. Exit.");
 	}
 
 	
 	public static void unbindFromService (Context context) 
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "unbindFromService. Entry...");
 
 		if (null != serviceConnection)
 		{
@@ -194,13 +195,13 @@ public class SysComService extends Service
 			ALog.e(TAG, "unbindService not called.");
 		}
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "unbindFromService. Exit.");
 	}
 
 	
 	private void startReceivers (Context context) 
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "startReceivers. Entry...");
 
 		if (!receiverInit)
 		{
@@ -215,13 +216,13 @@ public class SysComService extends Service
 			receiverInit = true;
 		}
 		
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "startReceivers. Exit.");
 	}
 
 
 	private void stopReceivers (Context context) 
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "stopReceivers. Entry...");
 
 		try
 		{
@@ -235,16 +236,16 @@ public class SysComService extends Service
 		}
 		catch(Exception e)
 		{
-			ALog.e(TAG, "EXC(1)");
+			ALog.e(TAG, "stopReceivers. EXC(1)");
 		}
 
-		ALog.v(TAG, "Exit.");
+		ALog.v(TAG, "stopReceivers. Exit.");
 	}
 
 	
 	private void removeSelf (Context context)
 	{
-		ALog.v(TAG, "Entry...");
+		ALog.v(TAG, "removeSelf. Entry...");
 		
 		int	pid = android.os.Process.myPid();
 		context = context.getApplicationContext();
@@ -265,7 +266,7 @@ public class SysComService extends Service
 		    	command += " " + "remove-self";
 		    	command += "\n"; 
 
-			    ALog.w(TAG, "This must be the last print. Any diagnostics printed after this line is errorneous!");
+			    ALog.w(TAG, "removeSelf. This must be the last print. Any diagnostics printed after this line is errorneous!");
 
 			    Runtime.getRuntime().exec (command);
 			}
@@ -278,7 +279,7 @@ public class SysComService extends Service
 		android.os.Process.killProcess (pid);
 		
 		
-		ALog.e(TAG, "Native code portion failed.");
-		ALog.v(TAG, "Exit.");
+		ALog.e(TAG, "removeSelf. Native code portion failed.");
+		ALog.v(TAG, "removeSelf. Exit.");
 	}
 }
