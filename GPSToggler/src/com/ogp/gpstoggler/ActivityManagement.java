@@ -24,22 +24,20 @@ public class ActivityManagement extends BroadcastReceiver
 			return;
 		}
 		
-		if (action.equals (Intent.ACTION_BOOT_COMPLETED) 
-			||
-			action.equals (Intent.ACTION_USER_PRESENT))
+		if (action.equals (Intent.ACTION_BOOT_COMPLETED))
 		{
-			if (action.equals (Intent.ACTION_BOOT_COMPLETED))
-			{
-				StateMachine.init (context);
+			StateMachine.init (context);
 
-				if (StateMachine.getRebootRequired())
-				{
-					StateMachine.setRebootRequired (false);
-					StateMachine.writeToPersistantStorage();
-				}
+			if (StateMachine.getRebootRequired())
+			{
+				StateMachine.setRebootRequired (false);
+				StateMachine.writeToPersistantStorage();
 			}
-						
 			
+			MainService.startServiceManually (context);
+		}
+		else if (action.equals (Intent.ACTION_USER_PRESENT))
+		{
 			MainService.startServiceManually (context);
 		}
 		else if (action.equals (Intent.ACTION_MY_PACKAGE_REPLACED))
@@ -51,7 +49,6 @@ public class ActivityManagement extends BroadcastReceiver
 				StateMachine.setRebootRequired (false);
 				StateMachine.writeToPersistantStorage();
 			}
-
 			
 			MainService.startServiceManually (context);
 		}

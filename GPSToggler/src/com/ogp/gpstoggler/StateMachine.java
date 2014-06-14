@@ -83,6 +83,7 @@ public class StateMachine
 		useNotification		= false;
 		useDebugging		= false;
 		splitAware			= false;
+		rebootRequired		= false;
 		
 		readFromPersistantStorage();
 		loadGPSAwareApplications (false);

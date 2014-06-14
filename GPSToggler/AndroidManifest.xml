@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest 	xmlns:android="http://schemas.android.com/apk/res/android"
     		package="com.ogp.gpstoggler"
-    		android:versionCode="54"
-    		android:versionName="0.54" >
+    		android:versionCode="511"
+    		android:versionName="1.511" >
 
     <uses-sdk	android:minSdkVersion="9"
         		android:targetSdkVersion="17" />

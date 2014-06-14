@@ -11,6 +11,12 @@ It requires the 'su' privilegies only during the very first run (reboot is still
 
 Versions:
 
+1.0.511
+-------
+
+1. 1st practially used release
+
+
 0.54
 ----
 
