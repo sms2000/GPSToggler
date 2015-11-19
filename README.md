@@ -11,13 +11,18 @@ It requires the 'su' privilegies only during the very first run (reboot is still
 
 Versions:
 
+1.4.553
+-------
+
+1. Projects structure improved.
+
 
 1.4.538
 -------
 
 1. Bug fixes.
 
-2. Batch processing setteld.
+2. Batch processing settled.
 
 
 1.3.527

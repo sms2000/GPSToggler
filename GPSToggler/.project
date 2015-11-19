@@ -3,16 +3,20 @@
 	<name>GPSToggler</name>
 	<comment></comment>
 	<projects>
-		<project>Prebuilds</project>
+		<project>Native</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<triggers>clean,</triggers>
+			<triggers>auto,full,incremental,</triggers>
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/Ant_Builder_GPSToggler.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/GPSTogglerPrebuild.launch</value>
+				</dictionary>
+				<dictionary>
+					<key>incclean</key>
+					<value>true</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>

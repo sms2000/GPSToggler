@@ -1,6 +1,6 @@
 @echo off
 @echo GPSToggler version update.
-xcopy ..\Prebuilds\BatchPRocessor\version.xml assets\version.xml /Y
+xcopy ..\Prebuilds\BatchProcessor\version.xml assets\version.xml /Y
 @echo GPSToggler version updated.
 
 @echo GPSToggler copy stub.

@@ -3,6 +3,7 @@
 	<name>GPSActivityTest</name>
 	<comment></comment>
 	<projects>
+		<project>GPSToggler</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
