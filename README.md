@@ -11,6 +11,21 @@ It requires the 'su' privilegies only during the very first run (reboot is still
 
 Versions:
 
+
+1.4.538
+-------
+
+1. Bug fixes.
+
+2. Batch processing setteld.
+
+
+1.3.527
+-------
+
+1. Bug fixes.
+
+
 1.0.511
 -------
 
