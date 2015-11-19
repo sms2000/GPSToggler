@@ -52,6 +52,8 @@ public class KernelServices
 										  	   fields[1],		// mounting point
 										  	   fields[2])); 	// type
 				}
+				
+				lnr.close();
 			}
 			catch(IOException e)
 			{

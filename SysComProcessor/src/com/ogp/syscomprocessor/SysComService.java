@@ -39,6 +39,8 @@ public class SysComService extends Service
 		@Override
 		public void bindCallback() throws RemoteException 
 		{
+			
+			
 			ALog.v(TAG, "SysComServiceInterface.Stub::bindCallback. Entry...");
 
 			ALog.v(TAG, "SysComServiceInterface.Stub::bindCallback. Exit.");

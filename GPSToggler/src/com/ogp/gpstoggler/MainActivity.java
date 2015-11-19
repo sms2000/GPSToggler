@@ -13,6 +13,7 @@ import com.ogp.gpstoggler.xml.VersionXMLParser;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -39,7 +40,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	private static final String 		SYSTEM_DIRECTORY_44 	= "/system/priv-app/";
 	private static final String 		XBIN_DIRECTORY			= "/system/xbin/";
 	private static final String 		MODULE_STUB				= "libscp.so";
-	private static final String 		MODULE_NAME 			= "SysComProcessor.apk";
+	private static final String 		MODULE_NAME 			= "SysComProcessor/SysComProcessor.apk";
 	private static final String 		NATIVE_RUNNER			= "liboperator.so";
 
 	private static final long 			REBOOT_WAIT 			= 3000;		// 3 seconds
@@ -54,6 +55,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	private Handler						handler					= new Handler();
 	private BroadcastReceiver 			broadcastReceiver;
 	private boolean						currentGPSStatus		= false;
+	private boolean 					systemizedAttempt		= false;
 
 	
 	private class Reboot implements Runnable
@@ -136,6 +138,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	}
 	
 	
+	@SuppressLint("InflateParams")
 	@Override
 	protected void onCreate (Bundle savedInstanceState) 
 	{
@@ -176,7 +179,11 @@ public class MainActivity extends Activity implements OnEndOfTask
 	{
 		super.onResume();
 		
-		inviteSystemize();
+		if (!systemizedAttempt)
+		{
+			inviteSystemize();
+		}
+		
 		initAferSystem();
 
 		IntentFilter intentFilter = new IntentFilter (MainService.GPS_MAIN);
@@ -210,6 +217,7 @@ public class MainActivity extends Activity implements OnEndOfTask
         if (StateMachine.getRebootRequired())
         {
 // Maybe this time user wants to reboot?
+        	systemizedAttempt = true;
 			showRebootDialog();
         }
 	}
@@ -778,6 +786,8 @@ public class MainActivity extends Activity implements OnEndOfTask
 			 public void onClick (DialogInterface 	dialog, 
 					 			  int 				id) 
 			 {
+				 systemizedAttempt = true;
+
 				 dialog.cancel();
 				 
 				 new MoverThread().start();

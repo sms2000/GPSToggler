@@ -69,6 +69,7 @@ public class SysComBroadcastReceiver extends BroadcastReceiver
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void turnGpsOn (Context	context) 
 	{
 		ALog.v(TAG, "turnGpsOn. Entry...");
@@ -97,6 +98,7 @@ public class SysComBroadcastReceiver extends BroadcastReceiver
 	}
 
 
+	@SuppressWarnings("deprecation")
 	private void turnGpsOff (Context	context) 
 	{
 		ALog.v(TAG, "turnGpsOff. Entry...");
