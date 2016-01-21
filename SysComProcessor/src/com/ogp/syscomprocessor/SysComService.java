@@ -1,11 +1,9 @@
 package com.ogp.syscomprocessor;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
@@ -23,76 +21,35 @@ public class SysComService extends Service
 	private static final String 		XBIN_DIRECTORY		= "/system/xbin/";
 	private static final String 		MODULE_NAME 		= "SysComProcessor.apk";
 	private static final String 		NATIVE_RUNNER		= "liboperator.so";
-	private static final String			GUI_PACKAGE			= "com.ogp.gpstoggler";	
 	
 	private static final int 			PRIORITY 			= 1000;
 	
 	
 	static private SysComService		thisService;
-	static private ServiceConnection 	serviceConnection;
+	
 	private boolean 					receiverInit		= false;
-
+	private SysComBroadcastReceiver		broadcastReceiver	= new SysComBroadcastReceiver(); 
 	
 	
 	public final SysComServiceInterface.Stub mainServiceBinder = new SysComServiceInterface.Stub() 
 	{
 		@Override
-		public void bindCallback() throws RemoteException 
+		public void setGpsStatus(boolean gpsStatus) throws RemoteException 
 		{
-			ALog.v(TAG, "SysComServiceInterface.Stub::bindCallback. Entry...");
+			GPSActuator.setGpsStatus(thisService, gpsStatus);
 
-			ALog.v(TAG, "SysComServiceInterface.Stub::bindCallback. Exit.");
+			ALog.i(TAG, String.format ("SysComServiceInterface.Stub::setGpsStatus. Setting new GPS status: [%s]", gpsStatus ? "ON" : "OFF"));
 		}
-	};
 
-	
-	public final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() 
-	{
+
 		@Override
-		public void onReceive (Context 	context, 
-							   Intent 	intent) 
+		public boolean getGpsStatus() throws RemoteException 
 		{
-			ALog.v(TAG, "BroadcastReceiver::onReceive. Entry...");
+			boolean gpsStatus = GPSActuator.getGpsStatus(thisService); 
 
-			String action = intent.getAction();
-			
-			if (null == action)
-			{
-				ALog.w (TAG, "BroadcastReceiver::onReceive. Unknown action received."); 
-				
-				action = "";
-			}
-			
-			if (action.equals (Intent.ACTION_PACKAGE_REMOVED)
-/*				||
-				action.equals (Intent.ACTION_PACKAGE_FULLY_REMOVED)*/)
-			{
-				ALog.d(TAG, "BroadcastReceiver::onReceive. Action: " + intent.getAction());
-				
-				String 	packageName = "?";
-				
-				try
-				{
-					packageName = intent.getData().getSchemeSpecificPart();
-				}
-				catch(Exception e)
-				{
-				}
+			ALog.i(TAG, String.format ("SysComServiceInterface.Stub::getGpsStatus. [%s]", gpsStatus ? "ON" : "OFF"));
 
-				ALog.d(TAG, "BroadcastReceiver::onReceive. Package: " + packageName);
-				
-				if (packageName.equals (GUI_PACKAGE))
-				{
-					ALog.w(TAG,  "BroadcastReceiver::onReceive. Attempting to uninstall the system module.");
-					
-					unbindFromService (thisService);
-					removeSelf (thisService);
-				}
-			}
-			
-			
-			ALog.d(TAG, "BroadcastReceiver::onReceive. Processed action: " + action);
-			ALog.v(TAG, "BroadcastReceiver::onReceive. Exit.");
+			return gpsStatus;
 		}
 	};
 
@@ -159,19 +116,10 @@ public class SysComService extends Service
 		ALog.v(TAG, "bindToService. Entry...");
 		
 		
-		try
-		{
-			serviceConnection.toString();
-			ALog.e(TAG, "Repeated call.");
-		}
-		catch(Exception e)
-		{
-			Intent serviceIntent = new Intent(context.getApplicationContext(), 
-					  						  SysComService.class);
+		Intent serviceIntent = new Intent(context.getApplicationContext(), 
+				  						  SysComService.class);
 
-			context.startService (serviceIntent);
-		}
-		
+		context.startService (serviceIntent);
 		
 		ALog.v(TAG, "bindToService. Exit.");
 	}
@@ -181,20 +129,11 @@ public class SysComService extends Service
 	{
 		ALog.v(TAG, "unbindFromService. Entry...");
 
-		if (null != serviceConnection)
-		{
-			Intent serviceIntent = new Intent(context.getApplicationContext(), 
-					  						  SysComService.class);
+		Intent serviceIntent = new Intent(context.getApplicationContext(), 
+				  						  SysComService.class);
 
-			context.startService (serviceIntent);
+		context.startService (serviceIntent);
 			
-			ALog.d(TAG, "unbindService finished.");
-		}
-		else
-		{
-			ALog.e(TAG, "unbindService not called.");
-		}
-
 		ALog.v(TAG, "unbindFromService. Exit.");
 	}
 
@@ -243,7 +182,7 @@ public class SysComService extends Service
 	}
 
 	
-	private void removeSelf (Context context)
+	public static void removeSelf (Context context)
 	{
 		ALog.v(TAG, "removeSelf. Entry...");
 		

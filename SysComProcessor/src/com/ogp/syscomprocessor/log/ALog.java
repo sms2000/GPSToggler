@@ -16,41 +16,41 @@ public class ALog
 	public static void e (String 	tag, 
 	   		  			  String 	message) 
 	{
-		Log.e(prepareLog (mainTag, tag), message);
+		Log.e(mainTag, prepareLog (mainTag, message));
 	}
 
 
 	public static void w (String 	tag, 
 	   		  			  String 	message) 
 	{
-		Log.w(prepareLog (mainTag, tag), message);
+		Log.w(mainTag, prepareLog (mainTag, message));
 	}
 
 
 	public static void i (String 	tag, 
 	   		  			  String 	message) 
 	{
-		Log.i(prepareLog (mainTag, tag), message);
+		Log.i(mainTag, prepareLog (mainTag, message));
 	}
 
 
 	public static void d (String 	tag, 
 	   		  			  String 	message) 
 	{
-		Log.d(prepareLog (mainTag, tag), message);
+		Log.d(mainTag, prepareLog (mainTag, message));
 	}
 
 
 	public static void v (String 	tag, 
 	   		  			  String 	message) 
 	{
-		Log.v(prepareLog (mainTag, tag), message);
+		Log.v(mainTag, prepareLog (mainTag, message));
 	}
 
 
 	private static String prepareLog (String 	tag,
 						  			  String 	subtug)
 	{
-		return tag + "." + subtug;
+		return tag + "::" + subtug;
 	}
 }

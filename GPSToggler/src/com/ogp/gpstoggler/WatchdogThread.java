@@ -7,6 +7,8 @@ import android.app.ActivityManager;
 
 import java.util.List;
 
+import com.jaredrummler.android.processes.models.AndroidAppProcess;
+import com.jaredrummler.android.processes.ProcessManager;
 import com.ogp.gpstoggler.log.ALog;
 
 
@@ -119,7 +121,14 @@ public class WatchdogThread extends Thread
 					ALog.v(TAG,  "run. Checking: ... ?");
 				}
 				
-				verifyGPSSoftwareRunning();
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+				{
+					verifyGPSSoftwareRunning21();
+				}
+				else
+				{
+					verifyGPSSoftwareRunning();
+				}
 			}
 			else
 			{
@@ -160,6 +169,49 @@ public class WatchdogThread extends Thread
 				for (String iterator2 : listOfApps)
 				{
 					if (iterator.processName.equals (iterator2)) 
+					{
+						found = iterator2;
+						ALog.w(TAG, "verifyGPSSoftwareRunning. GPS status active due to foreground process: " + found);
+						break;
+					}
+				}
+			}
+			
+			
+			if (null != found)
+			{
+				statusNow = true;
+				break;
+			}
+		}
+
+		if (statusNow != statusSaved)
+		{
+			statusSaved = statusNow;
+			ALog.w(TAG, "verifyGPSSoftwareRunning. GPS software status changed. Now it's " + (statusSaved ? "running." : "stopped."));
+
+			handler.post(new StatusChange (statusSaved, 
+										   found));
+		}
+	}
+
+	
+	private void verifyGPSSoftwareRunning21() 
+	{
+		List<AndroidAppProcess> list 		= ProcessManager.getRunningAppProcesses();		
+		boolean					statusNow	= false;
+		String					found		= null;
+		boolean					importance 	= !StateMachine.getSplitAware(); 
+		
+		listOfApps = StateMachine.updateEnabledApplicationsList(listOfApps);
+		
+		for (AndroidAppProcess iterator : list)
+		{
+			if (!importance || iterator.foreground)
+			{
+				for (String iterator2 : listOfApps)
+				{
+					if (iterator.getPackageName().equals (iterator2)) 
 					{
 						found = iterator2;
 						ALog.w(TAG, "verifyGPSSoftwareRunning. GPS status active due to foreground process: " + found);

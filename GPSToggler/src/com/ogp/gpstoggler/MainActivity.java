@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
@@ -13,6 +14,7 @@ import com.ogp.gpstoggler.xml.VersionXMLParser;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -136,6 +138,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 	}
 	
 	
+	@SuppressLint("InflateParams")
 	@Override
 	protected void onCreate (Bundle savedInstanceState) 
 	{
@@ -321,7 +324,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 			ALog.w(TAG, "clickButton. Pressed when OFF");
 		}
 
-		MainService.swapGPSStatus (getApplicationContext());
+		MainService.swapGPSStatus();
 
 		ALog.v(TAG, "clickButton. Exit.");
 	}
@@ -689,7 +692,12 @@ public class MainActivity extends Activity implements OnEndOfTask
 	    	ALog.w(TAG, "Executing command [1]:\n" + command);
 		    ALog.w(TAG, "\n");
 
-		    flushCommand (command);			    
+			StateMachine.setRebootRequired (false);
+			StateMachine.writeToPersistantStorage();
+			
+			Thread.sleep(500);
+			
+			flushCommand (command);			    
 			
 		    ALog.w(TAG, "Calling native code succeeded.");
 			ALog.w(TAG, "Rebooting...");
@@ -917,10 +925,13 @@ public class MainActivity extends Activity implements OnEndOfTask
 	{
 		try 
 		{
-			new FileInputStream(new File(getSystemAppDirectory() + MODULE_NAME));
+			new FileInputStream(new File(getSystemAppDirectory() + MODULE_NAME)).close();
 			return true;
 		} 
 		catch (FileNotFoundException e) 
+		{
+		} 
+		catch (IOException e) 
 		{
 		} 
 		

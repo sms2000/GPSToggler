@@ -15,13 +15,13 @@
 	    			tools:context=".MainActivity" 
 	    			android:orientation="vertical" >
 	    
-	    
 	    <TextView
 	        android:id="@+id/description"
-	        android:onClick="clickButton"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@+string/description" />
+	        android:onClick="clickButton"
+	        android:text="@+string/description"
+	        android:textSize="12sp" />
 	    
 	    <TextView
 	        android:id="@+id/version"
@@ -33,14 +33,17 @@
 	    <RelativeLayout	android:layout_width="match_parent"
 	    				android:layout_height="wrap_content"
 	    				android:layout_marginRight="10dp"
+	    				android:layout_marginEnd="10dp"
 	    				android:orientation="horizontal">
+
 		    <CheckBox
 		        android:id="@+id/waze"
-		        android:layout_marginTop="20dp"
-		        android:onClick="clickWatchWaze"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="@+string/watch_waze" />
+		        android:layout_marginTop="20dp"
+		        android:onClick="clickWatchWaze"
+		        android:text="@+string/watch_waze"
+		        android:textSize="16sp" />
 	        
 		    <Button
 		        android:id="@+id/selectPackets"
@@ -49,18 +52,19 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_alignParentRight="true"
+		        android:layout_alignParentEnd="true"
 		        android:text="@+string/select_packets" />
 		    		    
 		    
 	    </RelativeLayout>
 	    
-	    
 	    <TextView
 	        android:id="@+id/btText"
-	        android:layout_marginTop="20dp"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@+string/bt_text" />
+	        android:layout_marginTop="20dp"
+	        android:text="@+string/bt_text"
+	        android:textSize="12sp" />
 	    
 	    <CheckBox
 	        android:id="@+id/bt"
@@ -72,10 +76,11 @@
 	    
 	    <TextView
 	        android:id="@+id/notificationText"
-	        android:layout_marginTop="20dp"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@+string/notification_text" />
+	        android:layout_marginTop="20dp"
+	        android:text="@+string/notification_text"
+	        android:textSize="12sp" />
 	    
 	    <CheckBox
 	        android:id="@+id/notification"
@@ -87,10 +92,11 @@
 	    
 	    <TextView
 	        android:id="@+id/debuggingText"
-	        android:layout_marginTop="20dp"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@+string/debugging_text" />
+	        android:layout_marginTop="20dp"
+	        android:text="@+string/debugging_text"
+	        android:textSize="12sp" />
 	    
 	    <CheckBox
 	        android:id="@+id/debugging"
@@ -108,21 +114,32 @@
 	        android:layout_height="wrap_content"
 	        android:text="@+string/split_aware" />
 	    
-	    <Button
-	        android:id="@+id/button"
-	        android:layout_marginTop="20dp"
-	        android:onClick="clickButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@+string/status_unknwon" />
+		<LinearLayout 	android:layout_width="match_parent"
+	    				android:layout_height="wrap_content"
+	    				android:layout_marginTop="30dp"
+	    				android:layout_marginLeft="10dp"
+	    				android:layout_marginRight="10dp"
+	    				android:orientation="horizontal"
+	    	            android:weightSum="1.0" 
+        				style="?android:attr/buttonBarStyle" >
+	    				 
+		    <Button
+	        	android:id="@+id/button"
+	        	android:onClick="clickButton"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+	    	    android:layout_weight=".5"
+	        	android:text="@+string/status_unknwon" 
+		        style="?android:attr/buttonBarButtonStyle" />
 	    
-	    <Button
-	        android:id="@+id/copyBinaries"
-	        android:layout_marginTop="20dp"
-	        android:onClick="clickCopyBinaries"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@+string/copy_binaries" />
-	    
-	   	</LinearLayout>
+		    <Button
+		        android:id="@+id/copyBinaries"
+		        android:onClick="clickCopyBinaries"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+	    	    android:layout_weight=".5"
+		        android:text="@+string/copy_binaries" 
+	        	style="?android:attr/buttonBarButtonStyle" />
+		</LinearLayout>
+   	</LinearLayout>
 </ScrollView>

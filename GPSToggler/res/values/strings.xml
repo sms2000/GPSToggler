@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="description">\tGPSToggler is a widget based program. It can turn on and off GPS even for those ROMs and kernels other widgets fail.\n\n\tThis widget requires the root access.\n\n\tSingle click on the widget toggles the GPS. Double click - launches this panel.\n\n\tThe widget may enable/disable GPS when selected applications (de)activated.</string>
+    <string name="description">\tGPSToggler is a widget based program. It can turn on and off GPS even for those ROMs and kernels other widgets fail.\n\n\tThis widget requires the root access.\n\n\tSingle click on the widget toggles the GPS. Double click - launches this panel.\n\n\tThe widget may enable/disable GPS when selected applications (de)activated.\n\n\tGPSToggler uses the \'AndroidProcesses\' library code courtesy Jared Rummler (https://github.com/jaredrummler/AndroidProcesses)</string>
     
     <string name="watch_waze">Watch for selected applications</string>
     
@@ -41,15 +41,15 @@
 	<string name="root">This application requires \'root\'.</string>
 	<string name="busybox">This application requires \'BusyBox\'. Do you want to install?</string>
 	<string name="install_module">This application need to install a module into the system area.\nInstall?</string>
-	<string name="move_success">The application successfully moved the module to /system/data area.\nReboot now?</string>
-	<string name="move_success2">The application successfully moved the module to /system/data area.\nFinishing...</string>
+	<string name="move_success">The application successfully moved the module to /system/app area.\nReboot now?</string>
+	<string name="move_success2">The application successfully moved the module to /system/app area.\nFinishing&#8230;</string>
 	<string name="move_error">The application failed to move the module to /system/data area.\nAppparently you have not rooted your device or the Superuser application needs to \'forget\' the GPSToggler.</string>
-	<string name="fatal_error">The application encounterd a fatal error.\nSorry...</string>
+	<string name="fatal_error">The application encounterd a fatal error.\nSorry&#8230;</string>
 
 	<string name="verison_format">Version: %s</string>
     
-    <string name="notify">GPSToggler active...</string> 
-    <string name="notify.active">Active...</string> 
+    <string name="notify">GPSToggler active&#8230;</string> 
+    <string name="notify.active">Active&#8230;</string> 
     
     <string name="notification_text">Add notification icon and bring the service to the foreground.</string>
     <string name="use_notification">Notification active</string>
@@ -58,15 +58,15 @@
     
     <string name="use_debugging">Extensive debugging</string>
     
-    <string name="wait_reboot">Rebooting...</string>
+    <string name="wait_reboot">Rebooting&#8230;</string>
     		
-    <string name="copy_binaries">Copy binaries [Debug]</string>
+    <string name="copy_binaries">Copy binaries [Debugging]</string>
 
     <string name="split_aware">SplitView aware</string>
 
-    <string name="select_packets">Select...</string>
+    <string name="select_packets">Select&#8230;</string>
     <string name="selectDescription">Mark the applications you may want to have GPS enabled:</string>
     <string name="selectDescriptionNo">No GPS aware applications found.</string>
-    <string name="itemKey">itemKey.</string>
+    <string name="itemKey">itemKey</string>
     
     </resources>

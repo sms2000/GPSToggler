@@ -59,6 +59,8 @@ public class KernelServices
 						ALog.v(TAG, "/system mounting point found.");
 					}
 				}
+				
+				lnr.close();
 			}
 			catch(IOException e)
 			{

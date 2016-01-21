@@ -19,8 +19,7 @@ public class OnActivity extends Activity
 
 		super.onResume();
 
-		MainService.setGPSStatus (getApplicationContext(), 
-				  				  true);
+		MainService.setGpsStatus (true);
 
 		finish();
 		

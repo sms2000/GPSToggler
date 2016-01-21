@@ -1,8 +1,7 @@
 package com.ogp.gpstoggler;
 
-import java.util.List;
-
 import com.ogp.gpstoggler.log.ALog;
+import com.ogp.syscomprocessor.SysComServiceInterface;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -11,11 +10,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.LocationManager;
+import android.content.ServiceConnection;
 import android.os.DeadObjectException;
 import android.os.Handler;
 import android.os.IBinder;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 
 
 public class MainService extends Service
@@ -38,51 +38,71 @@ public class MainService extends Service
 	private static final long 			SCREEN_OFF_DELAY		= 5000;			// 5 seconds		
 	
 	private static MainService			thisService				= null;
-	private static boolean 				currentGPSDecided		= false;
-	private static boolean 				currentGPSStatus		= false;
 	private Handler						messageHandler			= new Handler();
 	private ActivityManagement 			activityManagement;
 	private WatchdogThread 				watchdogThread;
 	private boolean						gpsSoftwareStatus		= false;
 	private long 						firstClickTime			= 0;
+	private boolean 					sysComServiceBound		= false;
+	private SysComServiceInterface 		sysComService			= null;
 
 	
 	
 	private final MainServiceInterface.Stub mainServiceBinder = new MainServiceInterface.Stub() 
-																{
-        															public void refreshGPSStatus() throws DeadObjectException 
-        															{
-        																internalRefreshGPSStatus();
-        															}
-																};
+	{
+		public void refreshGPSStatus() throws DeadObjectException 
+		{
+			internalRefreshGPSStatus();
+		}
+	};
 
 	
 	private final BroadcastReceiver			broadcastReceiver = new BroadcastReceiver()
-																	{
-																		@Override
-																		public void onReceive (Context 	context,
-																							   Intent 	intent) 
-																		{
-															            	ALog.v(TAG, "Entry...");
-															            	
-															                String payload = intent.getStringExtra (GPS_PAYLOAD);
-															                
-															                if (null != payload 
-															                	&& 
-															                	payload.equals (GPS_SWAPSTATUS))
-															                {
-															                	processClickOverWidget (context.getApplicationContext());
-																				
-															                	ALog.w(TAG, "Called 'RefreshGRPStatus'.");
-															                }
+	{
+		@Override
+		public void onReceive (Context 	context,
+							   Intent 	intent) 
+		{
+        	ALog.v(TAG, "Entry...");
+        	
+            String payload = intent.getStringExtra (GPS_PAYLOAD);
+            
+            if (null != payload 
+            	&& 
+            	payload.equals (GPS_SWAPSTATUS))
+            {
+            	processClickOverWidget (context.getApplicationContext());
+				
+            	ALog.w(TAG, "Called 'RefreshGRPStatus'.");
+            }
 
-															                
-															                ALog.v(TAG, "Exit.");
-																		}
-																	};
+            
+            ALog.v(TAG, "Exit.");
+		}
+	};
+
+																	
+	protected final ServiceConnection sysComConnection = new ServiceConnection()
+	{
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) 
+		{
+        	sysComService = SysComServiceInterface.Stub.asInterface(service);
+
+        	ALog.w(TAG, "Called 'onServiceConnected'.");
+		}
+
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) 
+		{
+			sysComService = null;
+			
+        	ALog.w(TAG, "Called 'onServiceDisconnected'.");
+		}	
+	};
 
 	
-																	
 	private class ProcessSingleClick implements Runnable
 	{
 		private Context applicationContext;
@@ -152,6 +172,8 @@ public class MainService extends Service
 		registerReceiver (broadcastReceiver,
 						  intentFilter1);
 
+		ALog.w(TAG, "Registered widget processing receivers.");
+
 		activityManagement = new ActivityManagement();
 		
 		IntentFilter intentFilter2 = new IntentFilter(Intent.ACTION_SCREEN_ON);
@@ -161,6 +183,23 @@ public class MainService extends Service
 						  intentFilter2);
 		
 		ALog.w(TAG, "Registered screen receivers.");
+
+		
+		Intent intent = new Intent();
+		intent.setClassName("com.ogp.syscomprocessor", "com.ogp.syscomprocessor.SysComService");
+		
+		try
+		{
+			bindService(intent, sysComConnection, Context.BIND_AUTO_CREATE);
+			sysComServiceBound = true;
+		}
+		catch(SecurityException e)
+		{
+			sysComServiceBound = false;
+		}
+		
+		ALog.w(TAG, "Registered SysComProcessor binding.");
+
 		
 		initWatchdogThread (true);
 		
@@ -197,7 +236,12 @@ public class MainService extends Service
     	initWatchdogThread (false);
     	gpsSoftwareStatus = false;
     	
-		unregisterReceiver (activityManagement);
+    	if (sysComServiceBound)
+    	{
+    		unbindService(sysComConnection);
+    	}
+
+        unregisterReceiver (activityManagement);
 		unregisterReceiver (broadcastReceiver);
 
 		ALog.w(TAG, "Unregistered screen receivers.");
@@ -283,22 +327,15 @@ public class MainService extends Service
 	}
 
 	
-	private static int getResIdByStatus() 
+	private int getResIdByStatus() 
 	{
-		if (!MainService.isGPSDecided())
+		if (StateMachine.getWatchGPSSoftware())
 		{
-			return R.drawable.gps_unknown;
+			return getGpsStatus() ? R.drawable.gps_control_on : R.drawable.gps_control_off;
 		}
 		else
 		{
-			if (StateMachine.getWatchGPSSoftware())
-			{
-				return MainService.getGPSStatus() ? R.drawable.gps_control_on : R.drawable.gps_control_off;
-			}
-			else
-			{
-				return MainService.getGPSStatus() ? R.drawable.gps_on : R.drawable.gps_off;
-			}
+			return getGpsStatus() ? R.drawable.gps_on : R.drawable.gps_off;
 		}
 	}
 	
@@ -323,61 +360,54 @@ public class MainService extends Service
 	}
 
 	
-	public static void swapGPSStatus (Context context) 
+	public static void swapGPSStatus()
+	{
+		thisService.swapGPSStatusInternal();
+	}
+	
+	
+	private void swapGPSStatusInternal() 
 	{
 		ALog.v(TAG, "Entry...");
 		
-		Intent intent = new Intent(GPS_ACTION);
-		
-		intent.putExtra (GPS_COMMAND, 
-						 getGPSStatus() ? GPS_OFF : GPS_ON);
-		
-		context.sendBroadcast (intent);
-
-		setGPSStatus (!getGPSStatus());
-		
+		boolean currentGpsStatus = getGpsStatus();
+		setGpsStatus(!currentGpsStatus);
 	
 		ALog.v(TAG, "Exit.");
 	}
 
 	
-	public static void setGPSStatus (Context 	context, 
-			 						 boolean 	enable) 
+	public static boolean getGpsStatus()
+	{
+		try
+		{
+			return thisService.sysComService.getGpsStatus();
+		}
+		catch(Exception e)
+		{
+		}
+		
+		return false;
+	}
+	
+	
+	public static void setGpsStatus (boolean 	enable) 
 	{
 		ALog.v(TAG, "Entry...");
 		
-		Intent intent = new Intent(GPS_ACTION);
-		
-		intent.putExtra (GPS_COMMAND, 
-						 enable ? GPS_ON : GPS_OFF);
-		
-		context.sendBroadcast (intent);
-
-		setGPSStatus (enable);
+		try 
+		{
+			thisService.sysComService.setGpsStatus(enable);
+		} 
+		catch (Exception e) 
+		{
+		}
 		
 		ALog.v(TAG, "Exit.");
 	}
 	
-
-	public static boolean getGPSStatus() 
-	{
-		return currentGPSStatus;
-	}
-
 	
-	public static void setGPSStatus (boolean status) 
-	{
-		currentGPSStatus = status;
-	}
-	
-
-	public static boolean isGPSDecided() 
-	{
-		return currentGPSDecided;
-	}
-
-	
-	public static void reportScreenStatus (boolean 	status) 
+	public static void reportScreenStatus (boolean status) 
 	{
 		ALog.v(TAG, "Entry...");
 
@@ -475,12 +505,12 @@ public class MainService extends Service
 			
 			if (!StateMachine.getWatchGPSSoftware())
 			{
-				swapGPSStatus (applicationContext);
+				swapGPSStatusInternal();
 			}
 
 			ALog.d(TAG, "Single click activated.");
 		}
-		
+
 		ALog.v(TAG, "Exit.");
 	}
 
@@ -515,8 +545,6 @@ public class MainService extends Service
 				watchdogThread.finish();
 				watchdogThread = null;
 
-				currentGPSDecided = false;
-				
 				ALog.d(TAG, "Watchdog thread finished.");
 			}
 		}
@@ -529,23 +557,21 @@ public class MainService extends Service
 	{
 		ALog.v(TAG, "Entry...");
 		
-// 0. Ask for the status		
-		askForGPSStatus();
-		
-		
+	
 // 1. Refresh widget based on this server.
     	updateWidget();		
     	
     	
 // 2. Inform the MainActivity and Widgets if any about the same event. 
-//    Use broadcast.     	
     	Intent intent = new Intent(MainService.GPS_MAIN);
     	
     	intent.putExtra (GPS_PAYLOAD, 
     				     GPS_REFRESH);
     	
-    	intent.putExtra (GPS_STATUS, 
-    					 getGPSStatus() ? 1 : 0);
+
+    	getGpsStatus();
+    	
+    	intent.putExtra (GPS_STATUS, getGpsStatus() ? 1 : 0);
     	
     	sendBroadcast (intent);
     	
@@ -556,35 +582,6 @@ public class MainService extends Service
 	}
 
 	
-	private void askForGPSStatus() 
-	{
-		boolean newStatus = false;
-			
-		LocationManager lm = (LocationManager)getSystemService (Context.LOCATION_SERVICE);
-		if (null != lm)
-		{
-			List<String> list = lm.getProviders (true);
-				
-			for (int i = 0; i < list.size(); i++)
-			{
-				ALog.v(TAG, "Provider: " + list.get (i));
-			
-				if (list.get (i).contains (GPS))
-				{
-					newStatus = true;
-				}
-			}
-
-			ALog.v(TAG, " ");
-		}	
-			
-			
-		currentGPSDecided = true;
-
-		ALog.d(TAG, "Real GPS status now " + (newStatus ? "on" : "off"));
-	}
-
-
 	private void updateWidget() 
 	{
 		ALog.v(TAG, "Entry...");
@@ -601,8 +598,7 @@ public class MainService extends Service
 		
 		if (StateMachine.getWatchGPSSoftware())
 		{
-			setGPSStatus (this, 
-						  gpsSoftwareStatus);
+			setGpsStatus (gpsSoftwareStatus);
 				
 			ALog.i(TAG, "Attempt to " + (gpsSoftwareStatus ? "activate GPS." : "deactivate GPS."));
 		}
@@ -619,7 +615,17 @@ public class MainService extends Service
 		{
 			BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
 
-			if (getGPSStatus())
+			boolean currentGpsStatus = false;
+			try
+			{
+				currentGpsStatus = sysComService.getGpsStatus();
+			}
+			catch(Exception e)
+			{
+			}
+
+			
+			if (currentGpsStatus)
 			{
 				if (null != btAdapter 
 					&& 

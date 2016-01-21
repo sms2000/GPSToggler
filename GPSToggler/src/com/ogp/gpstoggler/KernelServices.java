@@ -40,10 +40,11 @@ public class KernelServices
 
 		if (mountPoints.isEmpty())
 		{
+			LineNumberReader 	lnr = null;
 			try
 			{
-				LineNumberReader 	lnr = new LineNumberReader(new FileReader(MOUNTING_POINTS));
-				String 				line;
+				lnr = new LineNumberReader(new FileReader(MOUNTING_POINTS));
+				String 	line;
 				
 				while ((line = lnr.readLine()) != null)
 				{
@@ -57,6 +58,19 @@ public class KernelServices
 			{
 				ALog.e(TAG, "EXC(1)");
 				e.printStackTrace();
+			}
+			finally
+			{
+				if (null != lnr)
+				{
+					try 
+					{
+						lnr.close();
+					} 
+					catch (IOException e) 
+					{
+					}
+				}
 			}
 		}
 

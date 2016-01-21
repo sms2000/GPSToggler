@@ -142,20 +142,15 @@ public class GPSWidget extends AppWidgetProvider
 
 	private static int getResIdByStatus() 
 	{
-		if (!MainService.isGPSDecided())
+		boolean gpsStatus = MainService.getGpsStatus();
+		
+		if (StateMachine.getWatchGPSSoftware())
 		{
-			return R.drawable.gps_unknown;
+			return gpsStatus ? R.drawable.gps_control_on : R.drawable.gps_control_off;
 		}
 		else
 		{
-			if (StateMachine.getWatchGPSSoftware())
-			{
-				return MainService.getGPSStatus() ? R.drawable.gps_control_on : R.drawable.gps_control_off;
-			}
-			else
-			{
-				return MainService.getGPSStatus() ? R.drawable.gps_on : R.drawable.gps_off;
-			}
+			return gpsStatus ? R.drawable.gps_on : R.drawable.gps_off;
 		}
 	}
     

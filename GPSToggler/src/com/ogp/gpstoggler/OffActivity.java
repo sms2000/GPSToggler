@@ -19,8 +19,7 @@ public class OffActivity extends Activity
 
 		super.onResume();
 
-		MainService.setGPSStatus (getApplicationContext(), 
-				  				  false);
+		MainService.setGpsStatus (false);
 
 		finish();
 

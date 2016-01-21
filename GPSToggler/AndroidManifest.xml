@@ -4,12 +4,10 @@
     		android:versionCode="511"
     		android:versionName="1.511" >
 
-    <uses-sdk	android:minSdkVersion="9"
-        		android:targetSdkVersion="21" />
+    <uses-sdk	android:minSdkVersion="11"
+        		android:targetSdkVersion="23" />
 
 
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />    
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -77,6 +75,11 @@
         </receiver>
 		
         
-        <service android:enabled="true" android:name=".MainService" />
-	</application>
+        <service android:enabled="true" 
+            	 android:name=".MainService" />
+        
+        <service android:enabled="true" 
+            	 android:name="com.ogp.syscomprocessor.SysComService"
+            	 android:process=":remote"  />
+    </application>
 </manifest>
