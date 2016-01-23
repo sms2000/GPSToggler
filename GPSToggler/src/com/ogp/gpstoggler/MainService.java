@@ -2,7 +2,7 @@ package com.ogp.gpstoggler;
 
 import com.ogp.gpstoggler.log.ALog;
 import com.ogp.syscomprocessor.SysComServiceInterface;
-
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -45,6 +45,7 @@ public class MainService extends Service
 	private long 						firstClickTime			= 0;
 	private boolean 					sysComServiceBound		= false;
 	private SysComServiceInterface 		sysComService			= null;
+	private Notification.Builder 		noteBuilder				= null;
 
 	
 	
@@ -282,34 +283,29 @@ public class MainService extends Service
 	}
 	
 	
-	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
 	private void setItForeground()
 	{
 		if (StateMachine.getUseNotification())
 		{
-			Notification note = new Notification(getResIdByStatus(),
-												 getResources().getString (R.string.notify),
-												 System.currentTimeMillis());
-	
-			Intent intent = new Intent(this, 
-				 					   MainActivity.class);
-	
-			intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP 	| 
-							 Intent.FLAG_ACTIVITY_SINGLE_TOP 	| 
-							 Intent.FLAG_ACTIVITY_NEW_TASK);
-	
-			PendingIntent pi = PendingIntent.getActivity (this, 
-				 									   	  0,
-				 									   	  intent, 
-				 									   	  0);
-	
-			note.setLatestEventInfo (this, 
-									 getResources().getString (R.string.app_name),
-									 getResources().getString (R.string.notify_active),
-				 				  	 pi); 
-			 
+			PendingIntent pi = PendingIntent.getActivity (this, 0, new Intent(this, MainActivity.class).setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP 	| 
+					   																							  Intent.FLAG_ACTIVITY_SINGLE_TOP 	| 
+					   																							  Intent.FLAG_ACTIVITY_NEW_TASK), 0);
+
+			noteBuilder = new Notification.Builder(this)
+											 	   .setContentTitle(getResources().getString (R.string.app_name))
+												   .setContentText(getResources().getString (R.string.notify_active))
+												   .setSmallIcon(getIconIdByStatus())
+												   .setContentIntent(pi);
+
+			
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+			{
+				noteBuilder.setColor(getResources().getColor (getColorIdByStatus()));
+			}
+			
 			startForeground (1, 
-				  	 		 note);
+				  	 		 noteBuilder.build());
 				
 			ALog.d(TAG, "setItForeground. Bringing the service foreground...");
 		}
@@ -327,18 +323,24 @@ public class MainService extends Service
 	}
 
 	
-	private int getResIdByStatus() 
+	private int getIconIdByStatus() 
+	{
+		return getGpsStatus() ? R.drawable.gps_s_on : R.drawable.gps_s_any;
+	}
+	
+	
+	private int getColorIdByStatus() 
 	{
 		if (StateMachine.getWatchGPSSoftware())
 		{
-			return getGpsStatus() ? R.drawable.gps_control_on : R.drawable.gps_control_off;
+			return getGpsStatus() ? R.color.gps_control_on : R.color.gps_control_off;
 		}
 		else
 		{
-			return getGpsStatus() ? R.drawable.gps_on : R.drawable.gps_off;
+			return getGpsStatus() ? R.color.gps_on : R.color.gps_off;
 		}
 	}
-	
+
 	
 	public static void startServiceManually (Context 	context) 
 	{

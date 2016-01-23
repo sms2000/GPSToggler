@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="gps_unknown" type="color">#FF909090</item>
+    <item name="gps_control_on" type="color">#FF30B0B0</item>
+    <item name="gps_control_off" type="color">#FFB0B030</item>
+    <item name="gps_on" type="color">#FF30B000</item>
+    <item name="gps_off" type="color">#FFB00030</item>
+
+	<integer-array name="backgroundcolors">
+        <item>@color/gps_unknown</item>
+	    <item>@color/gps_control_on</item>
+        <item>@color/gps_control_off</item>
+        <item>@color/gps_on</item>
+        <item>@color/gps_off</item>
+    </integer-array>    
+</resources>

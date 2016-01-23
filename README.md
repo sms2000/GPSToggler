@@ -1,15 +1,36 @@
-=======
-THIS CODE IS 'UNRESTRICTED PUBLIC DOMAIN' LICENCED.
+==========
+THIS CODE IS 'UNRESTRICTED PUBLIC DOMAIN' LICENCED except 3rd party code of 'AndroidProcesses' library with Apache license.
+
+Let me know if you consider your rights violated.
 
 
 GPSToggler
 ==========
 
-GPS toggle widget for Android rooted devices. It wrks well even for those ROMs and kernels, other software failed.
+GPS toggle widget for Android rooted devices. It works even for those ROMs and kernels, other software failed.
 It requires the 'su' privilegies only during the very first run (reboot is still required). 
+
+Now compatible with Android Marshmallow.
+
+Utilizes parts of 'AndroidProcesses' library code courtesy Jared Rummler from
+https://github.com/jaredrummler/AndroidProcesses
 
 
 Versions:
+
+2.2.566
+-------
+
+1. GUI improvements (Notification bar icons).
+
+
+2.2.564
+-------
+
+1. Compatible with 5.0.x, 5.1.x, 6.0.x Androids.
+
+2. GUI improvements, bugfixes, etc.. 
+
 
 1.4.553
 -------
