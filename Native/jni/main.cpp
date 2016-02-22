@@ -734,7 +734,7 @@ int fs_remount (char 	*device,
 				 	 MS_MGC_VAL | MS_REMOUNT | (write ? 0 : MS_RDONLY),
 				 	 "");
 
-	if (ret != 0 && errno == EACCES)
+	if (ret != 0 && (errno == EACCES || errno == EROFS))
 	{
 // 2nd attempt - 'mount'
 		char	cmd[512];

@@ -161,6 +161,21 @@ public class WatchdogThread extends Thread
 															ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE : ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND; 
 		
 		listOfApps = StateMachine.updateEnabledApplicationsList(listOfApps);
+		if (listOfApps.size() < 1)
+		{
+			if (statusSaved)
+			{
+				statusSaved = false;
+
+				ALog.w(TAG, "verifyGPSSoftwareRunning. GPS software status changed. Now it's " + (statusSaved ? "running." : "stopped."));
+
+				handler.post(new StatusChange (statusSaved, 
+											   null));
+			}
+			
+			return;
+		}
+
 		
 		for (ActivityManager.RunningAppProcessInfo iterator : list)
 		{
@@ -204,6 +219,20 @@ public class WatchdogThread extends Thread
 		boolean					importance 	= !StateMachine.getSplitAware(); 
 		
 		listOfApps = StateMachine.updateEnabledApplicationsList(listOfApps);
+		if (listOfApps.size() < 1)
+		{
+			if (statusSaved)
+			{
+				statusSaved = false;
+
+				ALog.w(TAG, "verifyGPSSoftwareRunning21. GPS software status changed. Now it's " + (statusSaved ? "running." : "stopped."));
+
+				handler.post(new StatusChange (statusSaved, 
+											   null));
+			}
+			
+			return;
+		}
 		
 		for (AndroidAppProcess iterator : list)
 		{
@@ -214,7 +243,7 @@ public class WatchdogThread extends Thread
 					if (iterator.getPackageName().equals (iterator2)) 
 					{
 						found = iterator2;
-						ALog.w(TAG, "verifyGPSSoftwareRunning. GPS status active due to foreground process: " + found);
+						ALog.w(TAG, "verifyGPSSoftwareRunning21. GPS status active due to foreground process: " + found);
 						break;
 					}
 				}
@@ -231,7 +260,7 @@ public class WatchdogThread extends Thread
 		if (statusNow != statusSaved)
 		{
 			statusSaved = statusNow;
-			ALog.w(TAG, "verifyGPSSoftwareRunning. GPS software status changed. Now it's " + (statusSaved ? "running." : "stopped."));
+			ALog.w(TAG, "verifyGPSSoftwareRunning21. GPS software status changed. Now it's " + (statusSaved ? "running." : "stopped."));
 
 			handler.post(new StatusChange (statusSaved, 
 										   found));

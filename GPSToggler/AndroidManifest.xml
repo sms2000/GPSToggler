@@ -4,23 +4,21 @@
     		android:versionCode="511"
     		android:versionName="1.511" >
 
-    <uses-sdk	android:minSdkVersion="11"
+    <uses-sdk	android:minSdkVersion="15"
         		android:targetSdkVersion="23" />
 
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.SUPER_USER" />
-    
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     
     <application	android:allowBackup="true"
         			android:icon="@drawable/ic_launcher"
         			android:label="@string/app_name"
-        			android:theme="@style/AppTheme" >
+        			android:theme="@style/AppTheme" 
+        			android:supportsRtl="true" >
         			
         <activity	android:name="com.ogp.gpstoggler.MainActivity"
             		android:label="@string/app_name" >

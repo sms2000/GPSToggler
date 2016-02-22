@@ -54,8 +54,9 @@
     <string name="notification_text">Add notification icon and bring the service to the foreground.</string>
     <string name="use_notification">Notification active</string>
     
-	<string name="debugging_text">\tProvide extensive debugging\n\t(more CPU required).</string>
-    
+	<string name="debugging_text">\tProvide extensive debugging (more CPU required).</string>
+	<string name="splitaware_text">\tAttempts to correctly process Multi-Window mode (Samsung, Android 5.1.1+, others).</string>
+	
     <string name="use_debugging">Extensive debugging</string>
     
     <string name="wait_reboot">Rebooting&#8230;</string>
@@ -64,9 +65,9 @@
 
     <string name="split_aware">SplitView aware</string>
 
-    <string name="select_packets">Select&#8230;</string>
-    <string name="selectDescription">Mark the applications you may want to have GPS enabled:</string>
+    <string name="select_packets">Select\napplications&#8230;</string>
+    <string name="selectDescription">\tMark the applications you may want to have GPS enabled:</string>
     <string name="selectDescriptionNo">No GPS aware applications found.</string>
     <string name="itemKey">itemKey</string>
-    
+    <string name="widget_description">GPSToggler widget</string>
     </resources>

@@ -37,29 +37,6 @@ public class StateMachine
 	private static Boolean					listUpdated		            = false;						
 	
 	
-	/*
-    private class ReadState extends AsyncTask<String, Long, Long> 
-    {
-		@Override
-		protected Long doInBackground (String... arg) 
-		{
-			return OK;
-		}
-		
-
-		@Override
-		protected void onProgressUpdate (Long... progress) 
-		{
-	    }
-
-		@Override
-		protected void onPostExecute (Long result) 
-		{
-		}
-    }
-	*/
-	
-	
 	private StateMachine()
 	{
 	}
@@ -198,14 +175,16 @@ public class StateMachine
 			}
 			
 			listUpdated = false;
-		
 			apps = new ArrayList<String>();
-	
-			for (AppItem app : listOfGPSAwareApplications)
+		
+			if (null != listOfGPSAwareApplications) 
 			{
-				if (app.getExpectsGPS())
+				for (AppItem app : listOfGPSAwareApplications)
 				{
-					apps.add (app.getPackageName());
+					if (app.getExpectsGPS())
+					{
+						apps.add (app.getPackageName());
+					}
 				}
 			}
 		}

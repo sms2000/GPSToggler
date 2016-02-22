@@ -9,30 +9,43 @@
 	        	android:layout_width="fill_parent"
 	        	android:layout_height="wrap_content"
 	        	android:text="@+string/selectDescription" 
-	        	android:textSize="20sp" />
+	        	android:textSize="12sp" />
     
-	<Button	android:id="@+id/ok"
-	    	android:layout_width="wrap_content"
-	    	android:layout_height="wrap_content"
-	    	android:layout_marginBottom="20dp"
-	    	android:minWidth="100dp"
-	    	android:onClick="clickOK"
-	    	android:text="@+string/ok"
-	    	android:layout_alignParentBottom="true"
-	    	android:layout_centerHorizontal="true"  />
+	<LinearLayout 	android:id="@+id/buttonLayout"
+					android:layout_width="wrap_content"
+    				android:layout_height="wrap_content"
+    				android:layout_marginTop="30dp"
+    				android:layout_marginLeft="10dp"
+    				android:layout_marginRight="10dp"
+    				android:layout_marginBottom="10dp"
+			    	android:layout_alignParentBottom="true"
+			    	android:layout_centerHorizontal="true" 
+    				android:orientation="horizontal"
+    	            android:weightSum="1.0" 
+       				style="?android:attr/buttonBarStyle" >
+
+		<Button	android:id="@+id/ok"
+		    	android:layout_width="0dp"
+	    	    android:layout_weight="1.0"
+		    	android:layout_height="wrap_content"
+		    	android:minWidth="150dp"
+		    	android:onClick="clickOK"
+		    	android:text="@+string/ok"
+		        style="?android:attr/buttonBarButtonStyle"/>
 	
+	</LinearLayout>
+
 	<ListView 	android:layout_width="match_parent"
 	    		android:layout_height="wrap_content"
+	    		android:layout_marginTop="20dp"
 	    		android:layout_marginLeft="10dp"
 	    		android:layout_marginRight="10dp"
 	    		android:layout_below="@+id/selectDescription"
-	    		android:layout_above="@+id/ok"
+	    		android:layout_above="@+id/buttonLayout"
 		        android:id="@+id/selectList"
 	    		android:orientation="vertical" 
     			android:fadeScrollbars="false"
     			android:scrollbarFadeDuration="0" 
     			android:scrollbars="vertical" >
-		    		
-    	    
     </ListView>
 </RelativeLayout>

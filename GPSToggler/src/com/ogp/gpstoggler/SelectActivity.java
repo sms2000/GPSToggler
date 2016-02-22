@@ -3,26 +3,77 @@ package com.ogp.gpstoggler;
 import java.util.List;
 
 import com.ogp.gpstoggler.log.ALog;
+
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 
 
 public class SelectActivity extends Activity 
 {
 	private static final String 		TAG 					= "SelectActivity";
+    private static final int 			MIN_TIMEOUT 			= 2000;
 	
-	private ListView					listOfApps;
 	private List<AppItem> 				applications;
+	private ListView 					listOfApps;
+	private ViewGroup 					viewGroup;
+	private Handler						handler = new Handler();
+	private Button						ok;
+	private ProgressDialog 				progress = null;
+	
+	
+	private class FillList extends Thread 
+	{
+		@SuppressLint("InflateParams")
+		@Override
+		public void run() 
+        {
+    		ALog.v(TAG, "FillList::run. Entry...");
+
+    		long time = System.currentTimeMillis();
+    		
+    		StateMachine.loadGPSAwareApplications (true);
+    		applications = StateMachine.getGPSAwareApplicationsList();
+    		
+    		long time2 = System.currentTimeMillis();
+    		if (time2 - time < MIN_TIMEOUT)
+    		{
+    			try 
+    			{
+					Thread.sleep(MIN_TIMEOUT + time - time2);
+				} 
+    			catch (InterruptedException e) 
+    			{
+				}
+    		}
+    		
+
+    		handler.post(new Runnable()
+    		{
+    			@Override
+    			public void run() 
+    			{
+    	    		ALog.v(TAG, "FillList::post::run. Finishing.");
+    				finishLoad();
+    			}
+    		});
+
+    		ALog.v(TAG, "FillList::run. Exit.");
+        }
+    }
 	
 	
 	private class StableArrayAdapter extends ArrayAdapter<AppItem> 
@@ -35,7 +86,8 @@ public class SelectActivity extends Activity
 	    }
 
 	    
-	    @Override
+	    @SuppressLint("ViewHolder")
+		@Override
 	    public View getView (int 		position, 
 	    					 View 		convertView, 
 	    					 ViewGroup	parent) 
@@ -74,6 +126,7 @@ public class SelectActivity extends Activity
 	
 	
 	
+	@SuppressLint("InflateParams")
 	@Override
 	protected void onCreate (Bundle savedInstanceState) 
 	{
@@ -81,16 +134,43 @@ public class SelectActivity extends Activity
 
 		super.onCreate (savedInstanceState); 
 		
-		ViewGroup viewGroup = (ViewGroup)getLayoutInflater().inflate (R.layout.activity_select, 
-				  													  null);
+		viewGroup  = (ViewGroup)getLayoutInflater().inflate (R.layout.activity_select, 
+		  		   										     null);
+
+		listOfApps = (ListView)viewGroup.findViewById (R.id.selectList);
+		ok		   = (Button)viewGroup.findViewById (R.id.ok);
+		ok.setEnabled(false);
+		
 		setContentView (viewGroup);
 
-		listOfApps 		  = (ListView)viewGroup.findViewById (R.id.selectList);
+		progress = new ProgressDialog(this);
+		progress.setTitle("");
+		progress.setMessage("");
+		progress.show();
+		
+		new FillList().start();
+
+		ALog.v(TAG, "onCreate. Exit.");
+	}
+
+
+	protected void finishLoad()
+	{
+		try
+		{
+			progress.dismiss();
+		}
+		catch(Exception e)
+		{
+		}
+
+		progress = null;
+		
+		
+		ALog.v(TAG, "finishLoad. Entry...");
+
 		TextView headline = (TextView)viewGroup.findViewById (R.id.selectDescription);
 
-		StateMachine.loadGPSAwareApplications (true);
-		applications = StateMachine.getGPSAwareApplicationsList();
-		
 		if (applications.size() > 0)
 		{
 			listOfApps.setAdapter (new StableArrayAdapter(this));
@@ -102,12 +182,12 @@ public class SelectActivity extends Activity
 			headline.setText (R.string.selectDescriptionNo);
 		}
 
-		
-		
-		ALog.v(TAG, "onCreate. Exit.");
+		ok.setEnabled(true);
+
+		ALog.v(TAG, "finishLoad. Exit.");
 	}
-
-
+	
+	
 	@Override
 	protected void onResume() 
 	{

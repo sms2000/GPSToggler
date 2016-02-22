@@ -30,33 +30,48 @@
 	        android:layout_height="wrap_content"
 	        android:text="" />
 	    
-	    <RelativeLayout	android:layout_width="match_parent"
+	    <LinearLayout	android:layout_width="match_parent"
 	    				android:layout_height="wrap_content"
 	    				android:layout_marginRight="10dp"
 	    				android:layout_marginEnd="10dp"
-	    				android:orientation="horizontal">
+	    	            android:weightSum="1.0" 
+	    				android:orientation="horizontal" >
 
-		    <CheckBox
+	        <CheckBox
 		        android:id="@+id/waze"
-		        android:layout_width="wrap_content"
+		        android:layout_width="0dp"
 		        android:layout_height="wrap_content"
+	    	    android:layout_weight=".7"
 		        android:layout_marginTop="20dp"
 		        android:onClick="clickWatchWaze"
 		        android:text="@+string/watch_waze"
 		        android:textSize="16sp" />
 	        
-		    <Button
-		        android:id="@+id/selectPackets"
-		        android:layout_marginTop="20dp"
-		        android:onClick="clickSelectPackets"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignParentRight="true"
-		        android:layout_alignParentEnd="true"
-		        android:text="@+string/select_packets" />
-		    		    
+	       	<LinearLayout 	
+		        android:id="@+id/selectButtonLayout"
+		        android:layout_width="0dp"
+   				android:layout_height="wrap_content"
+	    	    android:layout_weight=".3"
+   				android:layout_marginTop="20dp"
+   				android:layout_marginLeft="10dp"
+   				android:layout_marginStart="10dp"
+   				android:orientation="horizontal"
+   	            android:weightSum="1.0" 
+   				style="?android:attr/buttonBarStyle" >
 		    
-	    </RelativeLayout>
+			    <Button
+			        android:id="@+id/selectPackets"
+			        android:onClick="clickSelectPackets"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:minWidth="100dp"
+			        android:text="@+string/select_packets"
+			        android:lines="2" 
+			        style="?android:attr/buttonBarButtonStyle" />
+		    		    
+	    	</LinearLayout>
+			    		    	    
+	    </LinearLayout>
 	    
 	    <TextView
 	        android:id="@+id/btText"
@@ -68,7 +83,7 @@
 	    
 	    <CheckBox
 	        android:id="@+id/bt"
-	        android:layout_marginTop="20dp"
+	        android:layout_marginTop="4dp"
 	        android:onClick="clickTurnBT"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -84,7 +99,7 @@
 	    
 	    <CheckBox
 	        android:id="@+id/notification"
-	        android:layout_marginTop="20dp"
+	        android:layout_marginTop="4dp"
 	        android:onClick="clickNotification"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -100,15 +115,24 @@
 	    
 	    <CheckBox
 	        android:id="@+id/debugging"
-	        android:layout_marginTop="20dp"
+	        android:layout_marginTop="4dp"
 	        android:onClick="clickDebugging"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="@+string/use_debugging" />
 	    
-		<CheckBox
-	        android:id="@+id/splitAware"
+	    <TextView
+	        android:id="@+id/splitAwareText"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
 	        android:layout_marginTop="20dp"
+	        android:text="@+string/splitaware_text"
+	        android:textSize="12sp" />
+	    
+	    
+	    <CheckBox
+	        android:id="@+id/splitAware"
+	        android:layout_marginTop="4dp"
 	        android:onClick="clickSplitAware"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"

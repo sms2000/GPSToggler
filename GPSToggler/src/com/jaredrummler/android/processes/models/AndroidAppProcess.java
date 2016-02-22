@@ -17,7 +17,7 @@ public class AndroidAppProcess
 	{
 		this.pid  		= pid;
 		this.name 		= getProcessName(pid);
-		this.foreground = Cgroup.get(pid).getGroup("cpuset").group.contains("foreground");
+		this.foreground = CPUSet.get(pid).isForeground();
 	}
 
 

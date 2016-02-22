@@ -10,7 +10,10 @@
     <ImageView	android:id="@+id/bitmap"
         		android:layout_width="fill_parent" 
         		android:layout_height="fill_parent"
-        		android:layout_alignParentRight="true"
-        		android:src="@drawable/gps_unknown" />
-
+        		android:layout_marginLeft="5dp"
+        		android:layout_marginRight="5dp"
+        		android:layout_marginTop="5dp"
+        		android:layout_marginBottom="5dp"
+        		android:src="@drawable/gps_unknown"
+        		android:contentDescription="@+id/widget_description" />
 </LinearLayout>

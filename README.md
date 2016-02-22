@@ -16,7 +16,21 @@ Utilizes parts of 'AndroidProcesses' library code courtesy Jared Rummler from
 https://github.com/jaredrummler/AndroidProcesses
 
 
+ANTIVIRUS REPORTS MALICIOUS SOFTWARE
+====================================
+
+1. AVG Antivirus for Android reports the GPSToggler can steal your SMS. 
+   Actually this software has nothing to do with SMS at all (see the sources).
+
+
 Versions:
+
+
+2.2.578
+-------
+
+1. Various improvements (just don't remember what I did actually).
+
 
 2.2.566
 -------

@@ -158,6 +158,7 @@ public class MainActivity extends Activity implements OnEndOfTask
 		useNotification	= (CheckBox)viewGroup.findViewById (R.id.notification);
 		splitAware		= (CheckBox)viewGroup.findViewById (R.id.splitAware);
 				
+		
 		StateMachine.init (this);
 		VersionXMLParser.printVersion (this);
 
