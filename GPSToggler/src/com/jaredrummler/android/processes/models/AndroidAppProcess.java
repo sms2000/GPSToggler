@@ -17,7 +17,10 @@ public class AndroidAppProcess
 	{
 		this.pid  		= pid;
 		this.name 		= getProcessName(pid);
-		this.foreground = CPUSet.get(pid).isForeground();
+		
+		String value = Status.get(pid).getValue("State");
+		
+		this.foreground = (null != value)&& (value.contains("sleeping") || value.contains("running"));
 	}
 
 
@@ -30,7 +33,7 @@ public class AndroidAppProcess
 	@SuppressLint("DefaultLocale")
 	static public String getProcessName(int pid) throws IOException 
 	{
-		String cmdline = null;
+		String cmdline = null;  
   
 		try 
 		{

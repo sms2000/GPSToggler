@@ -1,7 +1,12 @@
 ==========
-THIS CODE IS 'UNRESTRICTED PUBLIC DOMAIN' LICENCED except 3rd party code of 'AndroidProcesses' library with Apache license.
+THIS CODE IS 'UNRESTRICTED PUBLIC DOMAIN UNGER GPLL' LICENCED except 3rd party code of 'AndroidProcesses' library with Apache license.
 
 Let me know if you consider your rights violated.
+
+* GPLL is the 'General Pet Lovers Licence' - the non-restricting license promoting the self control for humans.
+If you a pet lover, pet adopter, veterinary personel or in any other way helping cats, dogs and other pets to survice you are free to use this code.
+If you are a per hater or harmed any pet in any way you are also free to use this code yet you have to bear shame on you forever. *
+
 
 
 GPSToggler
@@ -24,6 +29,12 @@ ANTIVIRUS REPORTS MALICIOUS SOFTWARE
 
 
 Versions:
+
+2.4.603
+-------
+
+1. Android 5.1.1 - 6.0.1 support is mostly correct. 
+   Verified with AOSP 6.0.1 and CM13.
 
 
 2.2.578
